@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "scgextra:bandage"
+    },
+    "C": {
+      "tag": "c:chests"
+    },
+    "H": {
+      "item": "minecraft:shears"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "P": {
+      "item": "scguns:basic_poultice"
+    },
+    "S": {
+      "item": "scguns:honey_sulfur_poultice"
+    }
+  },
+  "pattern": [
+    "PSB",
+    "PSB",
+    "HCL"
+  ],
+  "result": {
+    "id": "scgextra:medkit"
+  },
+  "show_notification": false
+}

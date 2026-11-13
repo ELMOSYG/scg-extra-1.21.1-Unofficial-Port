@@ -1,0 +1,360 @@
+package net.zincstudios.scgextra.entity.piglin.piglin_warboss;
+
+import net.zincstudios.scgextra.entity.common.gun.MountedGun;
+import net.zincstudios.scgextra.entity.piglin.common.StunnableHog;
+import net.zincstudios.scgextra.entity.common.gun.AttachedMountedGun;
+import net.zincstudios.scgextra.entity.common.gun.CustomScorchedSimGun;
+import net.zincstudios.scgextra.sounds.PiglinSounds;
+
+import com.mojang.serialization.Dynamic;
+
+import net.zincstudios.scgextra.entity.ModBrainMemories;
+import net.zincstudios.scgextra.entity.common.brain.BrainCommons;
+import net.zincstudios.scgextra.entity.common.client.ExpandedAnimationController;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.zincstudios.scgextra.entity.asgharian.BulletSpawnOffset;
+import net.zincstudios.scgextra.entity.common.Gunner;
+import net.zincstudios.scgextra.entity.common.MobUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager.ControllerRegistrar;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
+import top.ribs.scguns.init.ModItems;
+
+public class PiglinWarbossEntity extends Monster implements GeoEntity, Gunner, BulletSpawnOffset {
+
+    public final Vec3 BarrelOffestRight = new Vec3(17.5f/16f, 29f/16f, -54f/16f * -1);
+    public final Vec3 BarrelOffestLeft = new Vec3(8.5f/16f, 30.5f/16f, -54f/16f * -1);
+
+    private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+
+    public final MountedGun BarrelRight;
+    public final MountedGun BarrelLeft;
+
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
+    private static final RawAnimation WALK = RawAnimation.begin().thenLoop("walk");
+    private static final RawAnimation SHOOT_WALKING = RawAnimation.begin().thenPlay("ranged_attack");
+    private static final RawAnimation SHOOT_STANDING = RawAnimation.begin().thenPlay("ranged_attack_stand");
+    private static final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
+    private static final RawAnimation CHARGE_START = RawAnimation.begin().thenPlay("charge_start");
+    private static final RawAnimation CHARGE_MIDDLE = RawAnimation.begin().thenPlay("charge_middle");
+    private static final RawAnimation CHARGE_END = RawAnimation.begin().thenPlay("charge_end");
+    private static final RawAnimation STUN_START = RawAnimation.begin().thenPlay("stun_start");
+    private static final RawAnimation STUN_MIDDLE = RawAnimation.begin().thenPlay("stun_middle");
+    private static final RawAnimation STUN_END = RawAnimation.begin().thenPlay("stun_end");
+    private static final RawAnimation SCREAM = RawAnimation.begin().thenPlay("scream");
+    private static final RawAnimation DEATH = RawAnimation.begin().thenPlayAndHold("death");
+
+    static int MELEE_DELAY = 20;
+    static int MELEE_DURATION = 40;
+
+    public static final StunnableHog instance = new StunnableHog(
+        20, 
+        25, 
+        25
+    );
+
+    static int CHARGE_START_DURATION = 20;
+    static int CHARGE_MIDDLE_DURATION = 400;
+    static int CHARGE_END_DURATION = 20;
+    static int CHARGE_DURATION = CHARGE_START_DURATION+CHARGE_MIDDLE_DURATION+CHARGE_END_DURATION;
+
+    private static final EntityDataAccessor<Long> TICKS_REMAINING = SynchedEntityData.defineId(PiglinWarbossEntity.class, EntityDataSerializers.LONG);
+
+    private static final EntityDataAccessor<Long> CHARGE_TICKS = SynchedEntityData.defineId(PiglinWarbossEntity.class, EntityDataSerializers.LONG);
+    
+    private final ServerBossEvent bossEvent =
+        new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.YELLOW, BossEvent.BossBarOverlay.PROGRESS);
+
+    public boolean isScreaming = false;
+
+    static int deathAnimTime = 40;
+
+    public PiglinWarbossEntity(EntityType<? extends Monster> entityType, Level level) {
+        super(entityType, level);
+        this.BarrelRight = new AttachedMountedGun(this,
+            new CustomScorchedSimGun.Builder(ModItems.CALLWELL_CONVERSION.get().getGun())
+                .projectileDamage(3f)
+                .fireRate(1)
+                .maxRange(20)
+                .idealRange(16)
+                .ammoCapacity(6)
+                .reloadTime(120)
+                .noGunFlash()
+                .gunIndex(0)
+                .build(),
+            BarrelOffestRight,
+            (a) -> true
+        );
+        this.BarrelLeft = new AttachedMountedGun(this,
+            new CustomScorchedSimGun.Builder(ModItems.CALLWELL_CONVERSION.get().getGun())
+                .projectileDamage(3f)
+                .fireRate(1)
+                .maxRange(20)
+                .idealRange(16)
+                .ammoCapacity(6)
+                .reloadTime(120)
+                .noGunFlash()
+                .gunIndex(1)
+                .build(),
+            BarrelOffestLeft,
+            (a) -> true
+        );
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Monster.createMonsterAttributes()
+        .add(Attributes.FOLLOW_RANGE, 128.0D)
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.ATTACK_DAMAGE, 35.0D)
+        .add(Attributes.KNOCKBACK_RESISTANCE, 0.8D)
+        .add(Attributes.ARMOR, 6.0D)
+        .add(net.minecraft.world.entity.ai.attributes.Attributes.STEP_HEIGHT, 2)
+        .add(Attributes.MAX_HEALTH, 800.0D);
+    }
+
+    @Override
+    public void registerControllers(ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "main", 4, state -> {
+            if(state.getAnimatable().isStunned()){
+                if(PiglinWarbossEntity.instance.isStart(state.getAnimatable().getTicksRemaining())){
+                    state.setAnimation(STUN_START);
+                }else if(PiglinWarbossEntity.instance.isMiddle(state.getAnimatable().getTicksRemaining())){
+                    state.setAnimation(STUN_MIDDLE);
+                }else if(PiglinWarbossEntity.instance.isEnd(state.getAnimatable().getTicksRemaining())){
+                    state.setAnimation(STUN_END);
+                }
+            }else if(state.getAnimatable().isCharging()){
+                if(state.getAnimatable().isStart(state.getAnimatable().getChargeTicksRemaining())){
+                    state.setAnimation(CHARGE_START);
+                }else if(state.getAnimatable().isMiddle(state.getAnimatable().getChargeTicksRemaining())){
+                    state.setAnimation(CHARGE_MIDDLE);
+                }else if(state.getAnimatable().isEnd(state.getAnimatable().getChargeTicksRemaining())){
+                    state.setAnimation(CHARGE_END);
+                }
+            }
+            else if(!state.isCurrentAnimation(SCREAM)){
+                if (net.zincstudios.scgextra.entity.common.MobUtil.isMoving(state.getAnimatable())) {
+                    state.setAnimation(WALK);
+                } else {
+                    state.setAnimation(IDLE);
+                }
+            }
+            return PlayState.CONTINUE;
+        }));
+
+        controllers.add(new AnimationController<>(this, "death", 2, state -> {
+            if (state.getAnimatable().isDeadOrDying()) {
+                return state.setAndContinue(DEATH);
+            }
+            return PlayState.STOP;
+        }));
+
+        controllers.add(new ExpandedAnimationController<>(this, "behavior", 0, state -> {
+            return PlayState.CONTINUE;
+        })
+            .triggerableAnim("melee", ATTACK)
+            .triggerableAnim("scream", SCREAM)
+            .triggerableAnim("shoot", (ctr)->{
+                if (((this.getX() - this.xo)*(this.getX() - this.xo))+((this.getZ() - this.zo)*(this.getZ() - this.zo))>0.0002) {
+                    return SHOOT_WALKING;
+                } else {
+                    return SHOOT_STANDING;
+                }
+            })
+        );
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.geoCache;
+    }
+
+    @Override
+    public Vec3 getBulletSpawnOffset(int gunIndex) {
+        return switch (gunIndex) {
+            case 0 -> this.BarrelOffestRight.yRot(-this.yHeadRot * Mth.DEG_TO_RAD);
+            case 1 -> this.BarrelOffestLeft.yRot(-this.yHeadRot * Mth.DEG_TO_RAD);
+            default -> Vec3.ZERO;
+        };
+    }
+
+    @Override
+    protected void tickDeath() {
+        MobUtil.tickDeath(this, deathAnimTime);
+    }
+
+    @Override
+    protected Brain<?> makeBrain(Dynamic<?> dynamic) {
+        return PiglinWarbossAi.makeBrain(this, this.brainProvider().makeBrain(dynamic));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Brain<PiglinWarbossEntity> getBrain() {
+        return (Brain<PiglinWarbossEntity>) super.getBrain();
+    }
+
+    @Override
+    protected Brain.Provider<PiglinWarbossEntity> brainProvider() {
+        return PiglinWarbossAi.brainProvider();
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        this.level().getProfiler().push("piglinBlazeKopterBrain");
+        this.getBrain().tick((ServerLevel)this.level(), this);
+        PiglinWarbossAi.updateActivity(this);
+        BrainCommons.updateMaxRangeAggressive(this);
+        if (this.getBrain().getMemory(ModBrainMemories.AIM_TICKS.get()).filter(aim -> aim > 5).isPresent()) {
+            this.setYBodyRot(this.getYHeadRot());
+        }
+        this.level().getProfiler().pop();
+        super.customServerAiStep();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(!this.level().isClientSide()){
+            this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+            if (brain.getTimeUntilExpiry(ModBrainMemories.DELAYED_MELEE.get()) == MELEE_DURATION) {
+                this.playSound(PiglinSounds.PIGLIN_WARBOSS_MELEE.get());
+                this.triggerAnim("behavior", "melee");
+            }
+            if(this.getBrain().hasMemoryValue(ModBrainMemories.STUNNED.get())){
+                this.setTicksRemaining(this.getBrain().getTimeUntilExpiry(ModBrainMemories.STUNNED.get()));
+            }else{
+                this.setTicksRemaining(Long.valueOf(-1));
+            }
+            if(this.getBrain().hasMemoryValue(ModBrainMemories.ABILITY_STATE.get())){
+                if(this.getBrain().getTimeUntilExpiry(ModBrainMemories.ABILITY_STATE.get()) == PiglinWarbossEntity.instance.getStunDuration()){
+                    this.playSound(PiglinSounds.PIGLIN_WARBOSS_STUN.get());
+                }
+                this.setChargeTicksRemaining(this.getBrain().getTimeUntilExpiry(ModBrainMemories.ABILITY_STATE.get()));
+            }else{
+                this.setChargeTicksRemaining(Long.valueOf(-1));
+            }
+        }
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(TICKS_REMAINING, Long.valueOf(0));
+        builder.define(CHARGE_TICKS, Long.valueOf(0));
+    }
+
+    public boolean isStunned(){
+        return this.entityData.get(TICKS_REMAINING) > 0;
+    }
+
+    public boolean isCharging(){
+        return this.entityData.get(CHARGE_TICKS) > 0;
+    }
+
+    public long getTicksRemaining(){
+        return this.entityData.get(TICKS_REMAINING);
+    }
+
+    public void setTicksRemaining(long l){
+        this.entityData.set(TICKS_REMAINING, l);
+    }
+
+    public long getChargeTicksRemaining(){
+        return this.entityData.get(CHARGE_TICKS);
+    }
+
+    public void setChargeTicksRemaining(long l){
+        this.entityData.set(CHARGE_TICKS, l);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if(this.getBrain().hasMemoryValue(ModBrainMemories.STUNNED.get()))amount*=2;
+        return super.hurt(source, amount);
+    }
+
+    public boolean isStart(long ticksRemaining){
+        return (CHARGE_DURATION - ticksRemaining) < CHARGE_START_DURATION;
+    }
+
+    public boolean isMiddle(long ticksRemaining){
+        return (CHARGE_DURATION - ticksRemaining) < (CHARGE_START_DURATION + CHARGE_MIDDLE_DURATION);
+    }
+
+    public boolean isEnd(long ticksRemaining){
+        return (CHARGE_DURATION - ticksRemaining) < (CHARGE_START_DURATION + CHARGE_MIDDLE_DURATION + CHARGE_START_DURATION + CHARGE_END_DURATION);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return PiglinSounds.PIGLIN_WARBOSS_IDLE.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return PiglinSounds.PIGLIN_WARBOSS_DEATH.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return this.getRandom().nextFloat() > 0.8f ? PiglinSounds.GENERAL_HURT.get() : SoundEvents.PIGLIN_BRUTE_HURT;
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        this.playSound(PiglinSounds.GENERAL_WALK.get(), this.getSoundVolume() * 0.15F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 0.3F);
+    }
+    @Override
+    public void startSeenByPlayer(ServerPlayer player) {
+        super.startSeenByPlayer(player);
+        this.bossEvent.addPlayer(player);
+    }
+
+    @Override
+    public void stopSeenByPlayer(ServerPlayer player) {
+        super.stopSeenByPlayer(player);
+        this.bossEvent.removePlayer(player);
+    }
+
+    @Override
+    public void setCustomName(Component name) {
+        super.setCustomName(name);
+        this.bossEvent.setName(this.getDisplayName());
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distance) {
+        return false;
+    }
+    @Override
+    public void die(DamageSource damageSource) {
+        this.stopTriggeredAnim("behavior", null);
+        super.die(damageSource);
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "stage=0": {
+      "model": "scgextra:block/warzone_spruce_sapling"
+    },
+    "stage=1": {
+      "model": "scgextra:block/warzone_spruce_sapling"
+    }
+  }
+}

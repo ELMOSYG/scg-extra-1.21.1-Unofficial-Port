@@ -1,0 +1,29 @@
+{
+  "required": true,
+  "priority": 1000,
+  "package": "net.zincstudios.scgextra.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AIGunEventMixin",
+    "MineUnitBlockEntityMixin",
+    "EntityMixin",
+    "GunAttackGoalAccessor",
+    "GunnerMobSpawnerMixin",
+    "LightningProjectileEntityMixin",
+    "LivingEntityMixin",
+    "MobBodyRotationMixin",
+    "ModCommandsMixin",
+    "OceanMonumentEntryRoomMixin",
+    "ProjectileEntityMixin",
+    "RaidFlareEntityMixin",
+    "RaidManagerMixin",
+    "RaidSaveDataAccessor",
+    "RecoilHandlerMixin",
+    "SignalBeaconEntityMixin",
+    "ResourceOrTagKeyArgumentMixin"
+  ],
+  "client": [
+    "HeadshotBoxDebugRendererMixin"
+  ],
+  "minVersion": "0.8.5"
+}

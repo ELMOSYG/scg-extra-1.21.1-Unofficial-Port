@@ -1,0 +1,28 @@
+SCG Extra — credits
+===================
+
+Upstream mod
+------------
+SCG Extra (scgextra) 4.0.0 — Zinc Studios
+  Authors: Zinc Studios, Daragetsu, Krei, Funado, Nope
+  Source license: GNU General Public License v3.0
+
+This repository is an unofficial port of that work to Minecraft 1.21.1 / NeoForge.
+The port keeps the original GPL-3.0 license and attribution.
+
+1.21.1 port
+-----------
+Maintained by the port contributors. Port-specific code (registration rewrites,
+1.21 data-component/capability migration, GeckoLib 4.9 / Framework 0.13 updates)
+is released under the same GPL-3.0.
+
+Bundled / referenced dependencies (not part of this repository's source)
+-----------------------------------------------------------------------
+- Scorched Guns 1.1.0 (top.ribs.scguns) — GPL-3.0-or-later — https://github.com/ribs-scguns
+- Framework (com.mrcrayfish.framework) — GPL-3.0
+- GeckoLib (software.bernie.geckolib) — MIT
+- Curios (top.theillusivec4.curios) — LGPL-2.1
+- TerraBlender (com.github.glitchfiend) — LGPL-3.0
+
+Minecraft is a trademark of Mojang Synergies AB. This project is not affiliated
+with Mojang or Microsoft.

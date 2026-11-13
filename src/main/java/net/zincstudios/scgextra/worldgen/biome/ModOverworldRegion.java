@@ -1,0 +1,72 @@
+package net.zincstudios.scgextra.worldgen.biome;
+
+import com.mojang.datafixers.util.Pair;
+
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.biome.Climate.Parameter;
+import net.zincstudios.scgextra.CommonConfig;
+import terrablender.api.ParameterUtils;
+import terrablender.api.Region;
+import terrablender.api.RegionType;
+import terrablender.api.VanillaParameterOverlayBuilder;
+
+import java.util.function.Consumer;
+
+public class ModOverworldRegion extends Region {
+public ModOverworldRegion(ResourceLocation name, int weight) {
+        super(name, RegionType.OVERWORLD, weight);
+    }
+
+    @Override
+    public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
+            VanillaParameterOverlayBuilder builder = new VanillaParameterOverlayBuilder();
+
+            new ParameterUtils.ParameterPointListBuilder()
+                    .temperature(
+                        Parameter.span(
+                            (float)CommonConfig.warzoneSpawnMinTemp,
+                            (float)CommonConfig.warzoneSpawnMaxTemp 
+                        )
+                    )
+                    .humidity(
+                        Parameter.span(
+                            (float)CommonConfig.warzoneSpawnMinHumidity,
+                            (float)CommonConfig.warzoneSpawnMaxHumidity 
+                        )
+                    )
+                    .continentalness(
+                        Parameter.span(
+                            (float)CommonConfig.warzoneSpawnMinContinentalness,
+                            (float)CommonConfig.warzoneSpawnMaxContinentalness 
+                        )
+                    )
+                    .erosion(
+                        Parameter.span(
+                            (float)CommonConfig.warzoneSpawnMinErosion,
+                            (float)CommonConfig.warzoneSpawnMaxErosion 
+                        )
+                    )
+                    .depth(
+                        ParameterUtils.Depth.SURFACE, 
+                        ParameterUtils.Depth.FLOOR
+                    )
+                    .weirdness(
+                        Parameter.span(
+                            (float)CommonConfig.warzoneSpawnMinWeirdness,
+                            (float)CommonConfig.warzoneSpawnMaxWeirdness 
+                        )
+                    )
+                    .build().forEach(
+                        point -> builder.add(
+                            point, 
+                            ModBiomes.WARZONE_BIOME
+                        )
+                    );
+
+            builder.build().forEach(mapper);
+    }
+}

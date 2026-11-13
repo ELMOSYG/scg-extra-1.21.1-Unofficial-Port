@@ -1,0 +1,62 @@
+{
+  "id": "scgextra:copper_knight",
+  "equipment_chance": 1.0,
+  "items": [
+    {
+      "item": "scguns:blooper",
+      "weight": 20.0,
+      "drop_chance": 0.0,
+      "min_durability": 0.2,
+      "max_durability": 0.5,
+      "slot": "mainhand"
+    },
+    {
+      "item": "scguns:whistler",
+      "weight": 5.0,
+      "drop_chance": 0.0,
+      "min_durability": 0.2,
+      "max_durability": 0.5,
+      "slot": "mainhand"
+    },
+    {
+      "item": "scguns:birdfeeder",
+      "weight": 5.0,
+      "drop_chance": 0.0,
+      "min_durability": 0.2,
+      "max_durability": 0.5,
+      "slot": "mainhand"
+    },
+    {
+      "item": "scguns:llr_director",
+      "weight": 4.0,
+      "drop_chance": 0.0,
+      "min_durability": 0.2,
+      "max_durability": 0.5,
+      "slot": "mainhand"
+    },
+    {
+      "item": "scguns:boomstick",
+      "weight": 5.0,
+      "drop_chance": 0.0,
+      "min_durability": 0.2,
+      "max_durability": 0.5,
+      "slot": "mainhand"
+    },
+    {
+      "item": "scguns:makeshift_rifle",
+      "weight": 3.0,
+      "drop_chance": 0.0,
+      "min_durability": 0.2,
+      "max_durability": 0.5,
+      "slot": "mainhand"
+    },
+    {
+      "item": "scguns:rusty_gnat",
+      "weight": 2.0,
+      "drop_chance": 0.0,
+      "min_durability": 0.2,
+      "max_durability": 0.5,
+      "slot": "mainhand"
+    }
+  ]
+}

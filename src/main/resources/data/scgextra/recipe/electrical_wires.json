@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "pattern":[
+        "   ",
+        "CBC",
+        "F F"
+    ],
+    "key":{
+        "F":{"tag": "minecraft:wooden_fences"},
+        "C":{"item": "minecraft:copper_ingot"},
+        "B":{"item": "scgextra:barbed_wires"}
+    },
+    "result":{
+        "id": "scgextra:electrical_wires",
+        "count": 3
+    }
+}

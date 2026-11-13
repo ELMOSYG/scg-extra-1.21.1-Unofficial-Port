@@ -1,0 +1,20 @@
+{
+  "values": [
+    "scguns:cog_knight",
+    "scguns:trauma_unit",
+    "scguns:cog_minion",
+    "scguns:sky_carrier",
+    "scguns:cog_knight",
+    "scguns:signal_beacon",
+    "scguns:scampler",
+    "scguns:scamp_tank",
+    "scgextra:cog_vulture",
+    "scgextra:cog_devastator",
+    "scgextra:cog_bombardier",
+    "scgextra:cog_gigantes",
+    "scgextra:cog_venator",
+    "scgextra:cog_centipede",
+    "scgextra:cog_juggernaut",
+    "scgextra:cog_trenchbleeder"
+  ]
+}

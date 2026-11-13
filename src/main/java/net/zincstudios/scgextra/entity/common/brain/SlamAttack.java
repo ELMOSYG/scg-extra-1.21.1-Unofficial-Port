@@ -1,0 +1,33 @@
+package net.zincstudios.scgextra.entity.common.brain;
+
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.zincstudios.scgextra.entity.ModBrainMemories;
+
+import java.util.List;
+
+public class SlamAttack extends DelayedMeleeAttack {
+
+    public SlamAttack(int damageDelay, int meleeDuration, float range, int meleeCooldown) {
+        super(damageDelay, meleeDuration, range, meleeCooldown);
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")  // because already handled on canStillUse
+    @Override
+    protected void tick(ServerLevel level, Mob mob, long gameTime) {
+        if (mob.getBrain().getMemory(ModBrainMemories.DELAYED_MELEE.get()).get() == gameTime) {
+            List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class,
+                    mob.getBoundingBox().inflate(this.range * 1.3),
+                    target -> mob != target
+            );
+
+            for (LivingEntity target : entities) {
+                mob.doHurtTarget(target);
+                double dx = mob.getX() - target.getX();
+                double dz = mob.getZ() - target.getZ();
+                target.knockback(2, dx, dz);
+            }
+        }
+    }
+}

@@ -1,0 +1,59 @@
+package net.zincstudios.scgextra.entity.neutral.end.end_scorpion;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.zincstudios.scgextra.entity.common.client.BaseEntityRenderer;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+public class EndScorpionRenderer<T extends EndScorpionEntity> extends BaseEntityRenderer<T> {
+
+    public EndScorpionRenderer(Context renderManager, GeoModel<T> model) {
+        super(renderManager, model);
+        this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
+            @Override
+            public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType,
+                               MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+                RenderType emissiveRenderType = getRenderType(animatable);
+                if (animatable.isStinging()) {
+                    getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, emissiveRenderType, bufferSource.getBuffer(emissiveRenderType),
+                            partialTick, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0xFFFF0000);
+                } else {
+                    getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, emissiveRenderType, bufferSource.getBuffer(emissiveRenderType),
+                            partialTick, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack,
+                       MultiBufferSource bufferSource, int packedLight) {
+        if(entity.isBaby()){
+            poseStack.scale(0.5f, 0.5f, 0.5f);
+        }
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
+
+    @Override
+    public void renderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource,
+                                  VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
+        if (!animatable.isStinging()) {
+            if (bone.getName().equals("eye_flash_1") || bone.getName().equals("eye_flash_2")) {
+                return;
+            }
+        }
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick,
+                packedLight, packedOverlay, 0xFFFFFFFF);
+    }
+}

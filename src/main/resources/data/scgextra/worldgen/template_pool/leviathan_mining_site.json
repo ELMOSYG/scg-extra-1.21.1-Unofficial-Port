@@ -1,0 +1,32 @@
+{
+  "name": "scgextra:leviathan_mining_site",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "scgextra:leviathan_mining_site/leviathan_mining_site_top",
+        "processors": [
+          {
+            "processor_type": "scgextra:warship_processor"
+          }
+        ]
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "scgextra:leviathan_mining_site/leviathan_mining_site_bottom",
+        "processors": [
+          {
+            "processor_type": "scgextra:warship_processor"
+          }
+        ]
+      }
+    }
+  ]
+}

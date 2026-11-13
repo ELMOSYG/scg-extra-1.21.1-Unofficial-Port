@@ -1,0 +1,144 @@
+package net.zincstudios.scgextra.entity.whaler.armoredwhale;
+
+import java.util.List;
+
+import com.google.common.collect.ImmutableMap;
+
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.behavior.Behavior;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.minecraft.world.phys.Vec3;
+import net.zincstudios.scgextra.sounds.WhalerSounds;
+
+public class Slam <T extends Mob> extends Behavior<T>{
+
+    private final int slamUpTicks;
+    private final int airTicks;
+    private final int slamDownTicks;
+    private final int cooldownDuration;
+    private int cooldown = 0;
+    private long runsUntil = 0;
+
+    public Slam(int slamUpTicks, int airTicks, int slamDownTicks, int cooldownDuration) {
+        super(ImmutableMap.of(
+            MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_PRESENT
+        ), slamUpTicks+airTicks+slamDownTicks);
+        this.slamUpTicks = slamUpTicks;
+        this.airTicks = airTicks;
+        this.slamDownTicks = slamDownTicks;
+        this.cooldownDuration = cooldownDuration;
+    }
+
+    @Override
+    protected boolean checkExtraStartConditions(ServerLevel level, T owner) {
+        if(this.cooldown > 0)this.cooldown--;
+        return this.cooldown <= 0 && owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).isPresent() && owner.distanceToSqr(owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get()) <= 900;
+    }
+
+    @Override
+    protected boolean canStillUse(ServerLevel level, T entity, long gameTime) {
+        return gameTime < this.runsUntil;
+    }
+
+    @Override
+    protected void start(ServerLevel level, T entity, long gameTime) {
+        ArmoredWhaleEntity owner = (ArmoredWhaleEntity)entity;
+        this.cooldown = this.cooldownDuration;
+        this.runsUntil = gameTime+this.slamUpTicks+this.airTicks+this.slamDownTicks;
+        owner.STARTED_SLAM = true;
+    }
+
+    @Override
+    protected void stop(ServerLevel level, T entity, long gameTime) {
+        ArmoredWhaleEntity owner = (ArmoredWhaleEntity)entity;
+        owner.STARTED_SLAM = false;
+    }
+    
+    @Override
+    protected void tick(ServerLevel level, T mob, long gameTime) {
+        ArmoredWhaleEntity owner = (ArmoredWhaleEntity)mob;
+        long hasRanFor = gameTime-(runsUntil-(this.slamUpTicks+this.airTicks+this.slamDownTicks));
+        if(hasRanFor == 0){
+            owner.triggerAnim("attack", "slam_up");
+            owner.playSound(WhalerSounds.ARMORED_WHALE_FINSLAP.get());
+        }
+        if(hasRanFor == this.slamUpTicks){
+            owner.playSound(WhalerSounds.ARMORED_WHALE_JUMP.get());
+            owner.setSlamming(true);
+            int seconds = airTicks/20;
+            int blocks = (78*seconds)/2;
+            int l = calculateLevel(blocks);
+            owner.addEffect(new MobEffectInstance(MobEffects.JUMP, this.airTicks, l));
+            owner.getJumpControl().jump();
+        }
+        if(hasRanFor >= this.slamUpTicks && hasRanFor <= this.slamUpTicks+this.airTicks){
+            if(owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).isPresent()){
+                LivingEntity target = owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get();
+                Vec3 startPos = new Vec3(owner.getX(), owner.getY(), owner.getZ());
+                Vec3 targetPos = new Vec3(target.getX(), owner.getY(), target.getZ());
+                Vec3 delta = targetPos.subtract(startPos);
+                owner.addDeltaMovement(delta.normalize().scale(owner.getSpeed()));
+            }
+        }
+        if(hasRanFor == this.slamUpTicks+this.airTicks){
+            owner.setSlamming(false);
+            owner.triggerAnim("attack", "slam_down");
+            owner.playSound(SoundEvents.IRON_GOLEM_STEP, 10f, 1f);
+        }
+        if((hasRanFor >= this.slamUpTicks+this.airTicks)){
+            int slamStart = this.slamUpTicks + this.airTicks;
+            int particleTick = (int) (hasRanFor - slamStart);
+            double progress = (double) particleTick / this.slamDownTicks;
+            double radius = 2.0 + progress * 18.0;
+            for (int i = 0; i < 60; i++) {
+                double angle = (Math.PI * 2 * i) / 60;
+                double x = owner.getX() + Math.cos(angle) * radius;
+                double z = owner.getZ() + Math.sin(angle) * radius;
+                level.sendParticles(
+                    ParticleTypes.CRIT,
+                    x,
+                    owner.getY() + 0.1,
+                    z,
+                    3,
+                    0.1, 0, 0.1,
+                    0
+                );
+            }
+        }
+        if(hasRanFor == (this.slamUpTicks+this.airTicks+this.slamDownTicks)-1){
+            List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, owner.headMiddlePart.getBoundingBox().inflate(50), (e)->!e.is(owner));
+            for(LivingEntity entity : list){
+                double distance = owner.headMiddlePart.distanceToSqr(entity.getX(), owner.getY(), entity.getZ());
+                if(distance <= 25){
+                    entity.hurt(owner.damageSources().generic(), 20);
+                }
+                if(distance > 25 && distance <= 100){
+                    entity.hurt(owner.damageSources().generic(), 10);
+                }
+                if(distance > 100){
+                    entity.hurt(owner.damageSources().generic(), owner.getRandom().nextInt(1, 6));
+                }
+            }
+        }
+    }
+
+    private int calculateLevel(int blocks){
+        int level = 0;
+        for(int i = 0; i < 255; i++){
+            //got the formula from minecraft.wiki/w/Jump_Boost
+            int blo = (int)Math.ceil(3.92 * Math.log( 5 * i / 196+31 / 28) / Math.log(0.98) + 5 * i + 21);
+            if(blocks < blo){
+                level = i;
+                break;
+            }
+        }
+        return level;
+    }
+}

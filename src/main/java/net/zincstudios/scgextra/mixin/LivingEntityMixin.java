@@ -1,0 +1,121 @@
+package net.zincstudios.scgextra.mixin;
+
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.zincstudios.scgextra.attributes.SCGEAttributes;
+import net.zincstudios.scgextra.item.armor.ArmorSet;
+import net.zincstudios.scgextra.item.armor.RitualArmorSet;
+import org.spongepowered.asm.mixin.Mixin;
+
+import top.ribs.scguns.entity.projectile.ProjectileEntity;
+import top.ribs.scguns.init.ModDamageTypes;
+
+@Mixin(value = LivingEntity.class)
+public class LivingEntityMixin {
+
+    @SuppressWarnings("ConstantValue")
+    @WrapMethod(method = "getDamageAfterMagicAbsorb")
+    private float atGetDamageAfterMagicAbsorb(DamageSource damageSource, float damageAmount, Operation<Float> original) {
+        //Undead Damage Multiplier Attribute
+        //all this will not stack.... probably
+        if(
+            (Object)this instanceof LivingEntity living && 
+            living.getType().is(net.minecraft.tags.EntityTypeTags.UNDEAD) && 
+            damageSource.getDirectEntity()!=null
+        ){
+            if(
+                damageSource.getDirectEntity() instanceof LivingEntity le && 
+                le.getAttribute(SCGEAttributes.UNDEAD_DAMAGE_MULT)!=null
+            ){
+                AttributeInstance ai = le.getAttribute(SCGEAttributes.UNDEAD_DAMAGE_MULT);
+                if(ai!=null){
+                    damageAmount *= (float)(1+(ai.getValue()/100));
+                }
+            }
+            if(
+                damageSource.getDirectEntity() instanceof ProjectileEntity pe && 
+                pe.getOwner()!=null && 
+                pe.getOwner() instanceof LivingEntity le &&
+                le.getAttribute(SCGEAttributes.UNDEAD_DAMAGE_MULT)!=null
+            ){
+                AttributeInstance ai = le.getAttribute(SCGEAttributes.UNDEAD_DAMAGE_MULT);
+                if(ai!=null){
+                    damageAmount *= (float)(1+(ai.getValue()/100));
+                }
+            }
+        }
+        
+        //melee
+        if(damageSource.getDirectEntity() instanceof LivingEntity le && le.getAttribute(SCGEAttributes.GENERAL_DAMAGE_MULT)!=null){
+            damageAmount*=(1+(le.getAttributeValue(SCGEAttributes.GENERAL_DAMAGE_MULT)/100));
+        }
+        //laser
+        if(damageSource.getDirectEntity()==null && damageSource.getEntity()!=null){
+            if(damageSource.getEntity() instanceof LivingEntity le){
+                damageAmount*=(1+(le.getAttributeValue(SCGEAttributes.GENERAL_DAMAGE_MULT)/100));
+                damageAmount*=(1+(le.getAttributeValue(SCGEAttributes.UNDEAD_DAMAGE_MULT)/100));
+            }
+        }
+        //projectile
+        if(damageSource.getDirectEntity() instanceof ProjectileEntity pe && pe.getShooter()!=null && pe.getShooter().getAttribute(SCGEAttributes.GENERAL_DAMAGE_MULT)!=null){
+            damageAmount*=(1+(pe.getShooter().getAttributeValue(SCGEAttributes.GENERAL_DAMAGE_MULT)/100));
+        }
+
+        if((damageSource.is(DamageTypes.MAGIC) || damageSource.is(DamageTypes.INDIRECT_MAGIC)) && (Object)this instanceof LivingEntity le){
+            AttributeInstance ai = le.getAttribute(SCGEAttributes.MAGIC_DAMAGE_REDUCTION);
+            if(ai!=null && ai.getValue()!=0.0){
+                damageAmount -= damageAmount*(float)(1+(ai.getValue()/100));   
+            }
+        }
+
+        if (damageSource.is(ModDamageTypes.BULLET)
+                && !damageSource.is(DamageTypeTags.BYPASSES_EFFECTS)
+                && (Object)this instanceof Player player) {
+            float damageMult = (float) (1+(player.getAttributeValue(SCGEAttributes.BULLET_DAMAGE_TAKEN_MULT)/100));
+            return original.call(damageSource, damageAmount * damageMult);
+        }
+
+        if(damageSource.getDirectEntity() instanceof Player p && (Object)this instanceof Monster){
+            float damageMult = (float)(1+(p.getAttributeValue(SCGEAttributes.UNDEAD_DAMAGE_MULT)/100));
+            return original.call(damageSource, damageAmount * damageMult);
+        }
+
+        return original.call(damageSource, damageAmount);
+    }
+
+    @WrapMethod(method = "checkTotemDeathProtection")
+    private boolean atCheckTotemDeathProtection(DamageSource damageSource, Operation<Boolean> original) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        Level level = self.level();
+
+        if (!damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            if (ArmorSet.getArmorSet(self) instanceof RitualArmorSet) {
+                int cooldownTicks = (int) (RitualArmorSet.getReviveCooldownEnd(self) - level.getGameTime());
+                if (cooldownTicks <= 0) {
+                    self.setHealth(1.0F);
+                    self.removeAllEffects();
+                    self.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
+                    self.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
+                    self.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
+                    level.broadcastEntityEvent(self, (byte)35);
+
+                    RitualArmorSet.setReviveCooldown(self, RitualArmorSet.COOLDOWN_DURATION);
+                    return true;
+                }
+            }
+        }
+
+        return original.call(damageSource);
+    }
+}
