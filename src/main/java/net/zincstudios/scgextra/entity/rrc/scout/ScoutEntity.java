@@ -42,6 +42,11 @@ public class ScoutEntity extends GunnerEntity implements GeoEntity {
     public void registerControllers(ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "walk/idle/aim", 2, state -> {
             if (state.getAnimatable().isAiming()) {
+                // 举枪移动时直接播 walk：部分模型没有专门的 walk_holding_aim，
+                // 继续用站立瞄准动画会滑步/出现 T-pose。
+                if (net.zincstudios.scgextra.entity.common.MobUtil.isMoving(state.getAnimatable())) {
+                    return state.setAndContinue(RawAnimation.begin().thenLoop("walk"));
+                }
                 return state.setAndContinue(AIMING);
             } else {
                 RawAnimation anim = RawAnimation.begin();

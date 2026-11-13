@@ -77,7 +77,7 @@ public class ScrapGuardEntity extends GunnerEntity implements GeoEntity {
                 state -> {
                     if (state.getAnimatable().isAiming()) {
                         if(net.zincstudios.scgextra.entity.common.MobUtil.isMoving(state.getAnimatable())){
-                            return state.setAndContinue(RawAnimation.begin().thenLoop("walk_holding_aim"));
+                            return state.setAndContinue(RawAnimation.begin().thenLoop("walk"));
                         }else{
                             return state.setAndContinue(AIMING);
                         }

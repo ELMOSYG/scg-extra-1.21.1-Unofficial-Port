@@ -666,3 +666,17 @@ return stand;
 - **世界创建崩溃已定位并修复**，重新构建的 jar 可以再次测试；
 - 其余 `scgextra` 相关日志均为资源/模型警告，不再有异常或崩溃；
 - Mixin、网络、实体注册、TerraBlender 区域（`Registered region scgextra:overworld to index 1`）均正常加载。
+
+### 3.20 举枪移动出现 T-pose（已修复）
+
+部分 RRC 枪手在 `isAiming() && isMoving()` 时播放 `walk_holding_aim`，但
+`tallman` / `scrap_guard` 的动画文件里并没有这个动画（只有 `walk` / `idle_aim`），
+GeckoLib 找不到动画就停在 T-pose。
+
+修复：移动 + 瞄准时统一改用 `walk`：
+
+- `CopperKnight` / `ScrapGuard` / `Tallman`：`walk_holding_aim` → `walk`；
+- `Scout`：瞄准分支增加移动判断，移动时播 `walk`，站立才播 `idle_aim`。
+
+已核对 `copper_knight / oppressor / scout / scrap_guard / tallman` 五个动画文件都同时
+包含 `idle_aim` 与 `walk`，不会再出现缺失动画。
