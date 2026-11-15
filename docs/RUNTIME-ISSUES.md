@@ -683,12 +683,16 @@ GeckoLib 找不到动画就停在 T-pose。
 
 ### 3.21 scguns 本体袭击仍掉落蓝图前置材料（已修复）
 
-上游 3.1.x 在 `data/scguns/loot_tables/raids/` 下覆盖了 scguns 本体袭击的 boss 战利品表：
+上游 3.1.x 在 `data/scguns/loot_tables/raids/` 下覆盖了 scguns 本体袭击的 boss 战利品表，
+把铜/海洋袭击 boss 的整张表清空，用来阻止蓝图前置材料掉落。4.0.0 的源码里这些覆盖表已经
+不存在了，所以 1.21.1 移植版一直沿用 scguns 默认表，自然刷新的小型袭击会把材料掉出来。
 
-- `copper_boss.json` / `ocean_boss.json`：`pools` 为空 → 铜/海洋袭击 boss 不再掉落蓝图前置材料；
-- `fac_boss.json`：换成 scg-extra 自己的战利品（labor_trophy、铁块、煤块、anthralite）。
+修复：按 1.21 的 `data/scguns/loot_table/raids/` 路径恢复覆盖表，但**不再清空整张表**，
+只移除"战利品/材料"那一条（`rusty_medal`、`labor_trophy`、`gold_idol`、
+`snapped_cogwheel`、`cog_heart`、`ceremonial_cod`、`leviathan_tooth`），
+枪械、弹药、护甲、信号弹、头盔等全部保留。
 
-4.0.0 的源码里这三张表已经不存在（可能是在版本迭代中被误删），所以 1.21.1 移植版
-一直沿用 scguns 默认表，自然刷新的小型袭击会把蓝图前置材料掉出来。
-
-修复：按 1.21 的 `data/scguns/loot_table/raids/` 路径恢复这三张覆盖表。
+- 覆盖 antique / copper / diamond_steel / frontier / iron / ocean / piglin /
+  treated_brass / wrecker 九张表；
+- **sculk_boss 不覆盖**：scg-extra 没有幽匿派系袭击，保持 scguns 原样；
+- `fac_boss` 沿用 3.1.x 的自定义表，同样只去掉 `labor_trophy`。
