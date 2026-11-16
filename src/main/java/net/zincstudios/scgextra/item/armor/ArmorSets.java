@@ -1,7 +1,10 @@
 package net.zincstudios.scgextra.item.armor;
 
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.zincstudios.scgextra.attributes.SCGEAttributes;
 import net.minecraft.nbt.CompoundTag;
+import java.util.Map;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,6 +39,24 @@ public final class ArmorSets {
     public static final ArmorSet RITUAL = new RitualArmorSet(SCGExtra.asResource("ritual"), new ArmorSet.Traits());
 
     public static final ArmorSet PIONEER = new ArmorSet(SCGExtra.asResource("pioneer"), new ArmorSet.Traits());
+
+    /** 每套装备对应的「已穿戴件数」计数器属性（每件 +0.5，满 4 件为 2.0）。 */
+    private static final Map<ArmorSet, Holder<Attribute>> COUNTERS = Map.ofEntries(
+            Map.entry(OPPRESSOR, SCGEAttributes.OPPRESSOR),
+            Map.entry(COMMISSAR, SCGEAttributes.COMMISSAR),
+            Map.entry(WRECKER, SCGEAttributes.WRECEKR),
+            Map.entry(LEVIATHAN, SCGEAttributes.LEVIATHAN),
+            Map.entry(GOLDEN_IDOL, SCGEAttributes.GOLDEN_IDOL),
+            Map.entry(ENLIGHTENED, SCGEAttributes.ENLIGHTENED),
+            Map.entry(JUGGERNAUT, SCGEAttributes.JUGGERNAUT),
+            Map.entry(RITUAL, SCGEAttributes.RITUAL),
+            Map.entry(PIONEER, SCGEAttributes.PIONEER)
+    );
+
+    /** 某个套装对应的计数器属性；未知套装返回 null。 */
+    public static Holder<Attribute> getCounter(ArmorSet set) {
+        return COUNTERS.get(set);
+    }
 
     public static void onEntityHurt(LivingDamageEvent.Pre event) {
         LivingEntity entity = event.getEntity();

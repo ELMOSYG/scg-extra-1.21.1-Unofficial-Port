@@ -696,3 +696,20 @@ GeckoLib 找不到动画就停在 T-pose。
   treated_brass / wrecker 九张表；
 - **sculk_boss 不覆盖**：scg-extra 没有幽匿派系袭击，保持 scguns 原样；
 - `fac_boss` 沿用 3.1.x 的自定义表，同样只去掉 `labor_trophy`。
+
+### 3.22 套装护甲 tooltip 动态化 + 完整中文语言包
+
+原来的 `ArmorSetPartItem#appendHoverText` 对每一件护甲都固定输出全套/散件两段说明，
+不区分当前穿了几件，看起来像「单件就触发套装」。
+
+现在改为动态显示：
+
+- 新增 `armorset.progress`（`已装备：%s/4 件`）；
+- 客户端读取同步过来的 `scgextra:<套装>` 计数器（每件 +0.5），换算成 0-4 件；
+- 达到 2 件的散件效果显示绿色，达到 4 件的全套效果显示绿色，未达到的显示灰色。
+
+同时补了完整 `zh_cn`：
+
+- `assets/scgextra/lang/zh_cn.json`：557 条，覆盖实体、刷怪蛋、物品、盔甲、勋章、属性、方块、效果、袭击文案与全部字幕；
+- `assets/scguns/lang/zh_cn.json`：34 条 scguns 命名空间里被 scg-extra 引用的提示（按住 Shift、信号弹、袭击播报、命令反馈）；
+- 翻译脚本保留在 `tools/gen_zh_cn.py`，后续增删键可以直接重跑。
