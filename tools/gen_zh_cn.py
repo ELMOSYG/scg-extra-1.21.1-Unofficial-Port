@@ -329,16 +329,35 @@ SPECIAL = {
 }
 
 
+def unit_only(name: str) -> str:
+    """字幕只保留单位名，去掉派系前缀。"""
+    for prefix in ("锈岭", "联邦", "阿斯加里安"):
+        if name.startswith(prefix):
+            return name[len(prefix):]
+    if name.startswith("COG "):
+        return name[4:]
+    if name.startswith("扫荡者"):
+        rest = name[3:].lstrip("·• ")
+        return rest if rest else name
+    if name.startswith("猪灵") and len(name) > 2:
+        return name[2:]
+    return name
+
+
 def tr_subtitle(key: str, value: str) -> str:
     path = key[len("scgextra.subtitle."):]
     if path in SPECIAL:
-        return SPECIAL[path]
+        if path == "piglin.general.hurt":
+            return SPECIAL[path]  # “猪灵盔甲”指盔甲材质，不是派系+单位
+        head, sep, tail = SPECIAL[path].partition("：")
+        return unit_only(head) + sep + tail
     parts = path.split(".")
     verb = parts[-1]
     entity = ".".join(parts[:-1])
-    name = fmt(SUB_ENTITY.get(entity))
-    if name is None:
+    raw = SUB_ENTITY.get(entity)
+    if raw is None:
         raise KeyError("unknown subtitle entity: " + entity)
+    name = unit_only(raw)
     table = MACHINE_VERB if entity in MACHINES else VERB
     action = table.get(verb) or VERB.get(verb)
     if action is None:
