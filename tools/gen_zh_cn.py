@@ -91,14 +91,14 @@ ENTITY = {
 # 套装：id -> (名称, 散件(2件), 全套(4件))
 SETS = {
     "oppressor": ("压迫者", "提供 100% 击退抗性", "对亡灵伤害 +10%"),
-    "commissar": ("政委", "受到的弹丸伤害 -10%", "换弹速度 +20%"),
-    "wrecker": ("破坏者", "攻击或受击时使敌人撕裂", "弹丸伤害 +20%，受到的弹丸伤害 +20%"),
+    "commissar": ("政委", "受到的子弹伤害 -10%", "装填速度 +20%"),
+    "wrecker": ("破坏者", "攻击或受击时使敌人撕裂", "子弹伤害 +20%，受到的子弹伤害 +20%"),
     "leviathan": ("利维坦", "每 10 秒净化一次减益", "获得水下呼吸与海豚的恩惠"),
     "golden_idol": ("黄金偶像", "为 5 格内的友方与中立生物恢复生命", "使 10 格内的敌对生物虚弱"),
     "enlightened": ("开悟者", "获得生命恢复，且不会被幽匿感测体侦测", "受击时获得治疗 I（3 秒冷却）"),
     "juggernaut": ("重装兵", "免疫撕裂", "后坐力 -10%，移动速度 -10%"),
     "ritual": ("仪式", "受击时获得生命恢复 I（4 秒冷却）", "死亡时复活（冷却 20 分钟）"),
-    "pioneer": ("先驱", "免疫漂浮，并获得鞘翅飞行能力", "暴击率 +10%，弹丸暴击伤害 +10%"),
+    "pioneer": ("先驱", "免疫漂浮，并获得鞘翅飞行能力", "暴击率 +10%，子弹暴击伤害 +10%"),
 }
 
 ITEM = {
@@ -125,20 +125,20 @@ ITEM = {
     "medal_of_enlightenment": "开悟勋章",
     "medal_of_conqueror": "征服者勋章",
     "medal_of_survivor.description": "提供 5 点护甲",
-    "medal_of_iron_will.description": "提供 20% 弹丸伤害减免",
-    "medal_of_defiance.description": "换弹速度与移动速度 +20%",
-    "medal_of_wonder.description": "获得抗性 I，并免疫中毒与硫磺中毒",
+    "medal_of_iron_will.description": "提供 20% 子弹伤害减免",
+    "medal_of_defiance.description": "装填速度与移动速度 +20%",
+    "medal_of_wonder.description": "获得抗性 I，并免疫中毒与硫中毒",
     "medal_of_fiery_rage.description": "获得力量 II 与生命恢复 I",
     "medal_of_obedience.description": "提供 3 点护甲韧性，后坐力 -30%",
-    "medal_of_cruelty.description": "弹丸伤害 +10%",
+    "medal_of_cruelty.description": "子弹伤害 +10%",
     "medal_of_enlightenment.description": "最大生命值 +8",
-    "medal_of_conqueror.description": "暴击率 +20%，弹丸重力 -20%",
+    "medal_of_conqueror.description": "暴击率 +20%，子弹重力 -20%",
 }
 
 SUPER_FLARE = {
-    "antique": "古董", "frontier": "拓荒", "copper": "铜", "iron": "铁",
-    "wrecker": "破坏者", "diamond_steel": "钻石钢", "treated_brass": "处理黄铜",
-    "gold": "金", "sculk": "幽匿", "ocean": "海洋",
+    "antique": "古典", "frontier": "边疆", "copper": "铜", "iron": "铁",
+    "wrecker": "扫荡者", "diamond_steel": "钻石钢", "treated_brass": "烈焰黄铜",
+    "gold": "黄金", "sculk": "幽匿", "ocean": "海洋",
 }
 
 ARMOR_PIECES = {"helmet": "头盔", "chestplate": "胸甲", "leggings": "护腿", "boots": "靴子"}
@@ -164,9 +164,9 @@ EFFECT = {
 
 ATTRIBUTE = {
     "recoil_multiplier": "后坐力修正 (%)",
-    "bullet_damage_taken_multiplier": "受到的弹丸伤害倍率",
+    "bullet_damage_taken_multiplier": "受到的子弹伤害倍率",
     "bullet_additional_crit_chance": "额外暴击率",
-    "bullet_gravity_multiplier": "弹丸重力倍率",
+    "bullet_gravity_multiplier": "子弹重力倍率",
     "undead_damage_multiplier": "对亡灵伤害倍率",
     "magic_damage_reduction": "受到的魔法伤害",
     "general_damage_mult": "通用伤害倍率",
@@ -184,23 +184,23 @@ ATTRIBUTE = {
 }
 
 RAID_LABEL = {
-    "whaler": "利维坦财团袭击",
-    "rrc": "锈岭袭击",
-    "fac": "联邦袭击",
-    "asgharian": "阿斯加里安袭击",
-    "cog": "COG 袭击",
-    "wrecker": "扫荡者袭击",
-    "piglin": "猪灵袭击",
+    "whaler": "利维坦联合军突袭",
+    "rrc": "锈岭突袭",
+    "fac": "联邦突袭",
+    "asgharian": "阿斯加里安突袭",
+    "cog": "COG 突袭",
+    "wrecker": "扫荡者突袭",
+    "piglin": "猪灵突袭",
 }
 
 RAID_ANNOUNCE = {
-    "whaler": "利维坦财团正从深海来袭！",
-    "rrc": "锈岭残部来袭！",
-    "fac": "联邦军械集团残部发起进攻！",
-    "asgharian": "阿斯加里安军团正在进军！",
-    "cog": "COG 营正在推进！",
-    "wrecker": "扫荡者正在横扫战场！",
-    "piglin": "猪灵军阀正在劫掠！",
+    "whaler": "利维坦联合军正从深渊中袭来！",
+    "rrc": "锈岭的残余部队正在突袭！",
+    "fac": "联邦军备联合会的残余势力正在发动袭击！",
+    "asgharian": "阿斯加里安军团正在行军！",
+    "cog": "COG 营队正在推进！",
+    "wrecker": "扫荡者突袭正在进行！",
+    "piglin": "猪灵军阀正在突袭！",
 }
 
 SUB_ENTITY = {

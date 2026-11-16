@@ -710,6 +710,10 @@ GeckoLib 找不到动画就停在 T-pose。
 
 同时补了完整 `zh_cn`：
 
-- `assets/scgextra/lang/zh_cn.json`：557 条，覆盖实体、刷怪蛋、物品、盔甲、勋章、属性、方块、效果、袭击文案与全部字幕；
-- `assets/scguns/lang/zh_cn.json`：34 条 scguns 命名空间里被 scg-extra 引用的提示（按住 Shift、信号弹、袭击播报、命令反馈）；
+- `assets/scgextra/lang/zh_cn.json`：557 条，覆盖实体、刷怪蛋、物品、盔甲、勋章、属性、方块、效果、突袭文案与全部字幕；
+- 术语对齐 scguns 1.21.1 移植版自带的社区汉化（ZR4U 提供）：`突袭`、`锈岭`、`联邦`、
+  `联邦军备联合会`、`利维坦联合军`、`扫荡者`、`古典 / 边疆 / 烈焰黄铜 / 幽匿`、
+  `子弹`（不写弹丸）、`装填速度`（不写换弹速度）、`硫中毒`；
+- 不再自带 `assets/scguns/lang/zh_cn.json`：scguns 的 jar 里已经带了完整社区汉化，
+  覆盖它反而会造成同名键冲突；
 - 翻译脚本保留在 `tools/gen_zh_cn.py`，后续增删键可以直接重跑。
