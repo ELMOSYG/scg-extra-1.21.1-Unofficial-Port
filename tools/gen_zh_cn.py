@@ -286,6 +286,24 @@ VERB = {
     "move": "移动", "defeat": "战败", "hurt_heavy": "重伤", "hit": "撞击", "warn": "警告", "idle_while_circling": "盘旋",
 }
 
+BULLET = "•"
+
+
+def fmt(name: str) -> str:
+    """派系名和单位名之间统一加 •，例如 联邦•战壕兵、COG•主宰。"""
+    for prefix in ("锈岭", "联邦", "阿斯加里安"):
+        if name.startswith(prefix):
+            return prefix + BULLET + name[len(prefix):]
+    if name.startswith("COG "):
+        return "COG" + BULLET + name[4:]
+    if name.startswith("扫荡者"):
+        rest = name[3:].lstrip("·• ")
+        return "扫荡者" + BULLET + rest if rest else name
+    if name.startswith("猪灵") and len(name) > 2:
+        return "猪灵" + BULLET + name[2:]
+    return name
+
+
 MACHINES = {
     "drone", "cog_devastator", "cog_bombardier", "cog_general", "cog_venator",
     "cog_gigantes", "cog_juggernaut", "cog_centipede", "cog_trenchbleeder",
@@ -318,7 +336,7 @@ def tr_subtitle(key: str, value: str) -> str:
     parts = path.split(".")
     verb = parts[-1]
     entity = ".".join(parts[:-1])
-    name = SUB_ENTITY.get(entity)
+    name = fmt(SUB_ENTITY.get(entity))
     if name is None:
         raise KeyError("unknown subtitle entity: " + entity)
     table = MACHINE_VERB if entity in MACHINES else VERB
@@ -330,11 +348,11 @@ def tr_subtitle(key: str, value: str) -> str:
 
 def translate(key: str, value: str) -> str:
     if key.startswith("entity.scgextra."):
-        return ENTITY[key[len("entity.scgextra."):]]
+        return fmt(ENTITY[key[len("entity.scgextra."):]])
     if key.startswith("item.scgextra."):
         rest = key[len("item.scgextra."):]
         if rest.endswith("_spawn_egg"):
-            return ENTITY[rest[: -len("_spawn_egg")]] + "刷怪蛋"
+            return fmt(ENTITY[rest[: -len("_spawn_egg")]]) + "刷怪蛋"
         if rest in ITEM:
             return ITEM[rest]
         for set_id, (set_name, _, _) in SETS.items():
