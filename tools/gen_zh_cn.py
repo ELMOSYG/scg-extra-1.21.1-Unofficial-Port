@@ -58,7 +58,7 @@ ENTITY = {
     "turret_seat": "炮塔座位",
     "cog_vulture": "COG 秃鹫侦察兵",
     "cog_devastator": "COG 毁灭者",
-    "cog_bombardier": "COG 四足火箭炮",
+    "cog_bombardier": "COG 轰击者",
     "cog_gigantes": "COG 巨型母舰",
     "cog_venator": "COG 猎手",
     "cog_centipede": "COG 蜈蚣",
@@ -222,7 +222,7 @@ SUB_ENTITY = {
     "arc_psycho": "锈岭电弧疯子",
     "gargoyle": "锈岭石像鬼",
     "cog_devastator": "COG 毁灭者",
-    "cog_bombardier": "COG 四足火箭炮",
+    "cog_bombardier": "COG 轰击者",
     "cog_general": "COG 统帅",
     "cog_venator": "COG 猎手",
     "cog_gigantes": "COG 巨型母舰",
@@ -286,7 +286,7 @@ VERB = {
     "move": "移动", "defeat": "战败", "hurt_heavy": "重伤", "hit": "撞击", "warn": "警告", "idle_while_circling": "盘旋",
 }
 
-BULLET = "•"
+BULLET = " "
 
 
 def fmt(name: str) -> str:
