@@ -269,6 +269,7 @@ SUB_ENTITY = {
     "piglin.pigdread": "惧猪",
     "piglin.piglin_kiln_hog": "猪灵熔炉疣猪",
     "piglin.piglin_warboss": "猪灵战酋",
+    "scrapguard": "锈岭废料卫士",
 }
 
 VERB = {
@@ -283,7 +284,7 @@ VERB = {
     "warning": "警告", "breath": "吐息", "breed": "繁殖", "sting": "蜇刺",
     "charging": "蓄力", "gun": "开枪", "claw": "利爪", "saw": "锯刃",
     "growl": "咆哮", "melee": "近战", "heavy_hurt": "重伤", "use": "使用",
-    "move": "移动", "defeat": "战败", "hurt_heavy": "重伤", "hit": "撞击", "warn": "警告", "idle_while_circling": "盘旋",
+    "move": "移动", "defeat": "战败", "hurt_heavy": "重伤", "hit": "撞击", "warn": "警告", "idle_while_circling": "盘旋", "speed": "冲刺", "roar": "咆哮", "punch": "挥拳",
 }
 
 BULLET = " "

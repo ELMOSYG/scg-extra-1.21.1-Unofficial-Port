@@ -555,5 +555,10 @@
   "attribute.scgextra.juggernaut": "Juggernaut",
   "attribute.scgextra.ritual": "Ritual",
   "attribute.scgextra.pioneer": "Pioneer",
-  "attribute.scgextra.bullet_additional_crit_damage_multiplier": "Additional Crit Damage Multiplier"
+  "attribute.scgextra.bullet_additional_crit_damage_multiplier": "Additional Crit Damage Multiplier",
+  "scgextra.subtitle.piglin.pigdread.hurt": "Pigdread Hurts",
+  "scgextra.subtitle.piglin.pigdread.speed": "Pigdread Sprints",
+  "scgextra.subtitle.piglin.pigkan.death": "Pigkan Dies",
+  "scgextra.subtitle.piglin.piglin_hog_rider.roar": "Piglin Hog Rider Roars",
+  "scgextra.subtitle.scrapguard.punch": "Rust Ridge Scrap Guard Punches"
 }

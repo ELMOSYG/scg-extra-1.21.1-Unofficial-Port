@@ -555,5 +555,10 @@
   "attribute.scgextra.juggernaut": "重装兵",
   "attribute.scgextra.ritual": "仪式",
   "attribute.scgextra.pioneer": "先驱",
-  "attribute.scgextra.bullet_additional_crit_damage_multiplier": "额外暴击伤害倍率"
+  "attribute.scgextra.bullet_additional_crit_damage_multiplier": "额外暴击伤害倍率",
+  "scgextra.subtitle.piglin.pigdread.hurt": "惧猪：受伤",
+  "scgextra.subtitle.piglin.pigdread.speed": "惧猪：冲刺",
+  "scgextra.subtitle.piglin.pigkan.death": "猪坎：死亡",
+  "scgextra.subtitle.piglin.piglin_hog_rider.roar": "疣猪骑士：咆哮",
+  "scgextra.subtitle.scrapguard.punch": "废料卫士：挥拳"
 }
