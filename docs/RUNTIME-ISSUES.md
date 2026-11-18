@@ -726,8 +726,8 @@ Create 6.x 的 `SeatBlock#canBePickedUp` 允许把敌对生物塞进坐垫（取
 
 修复做了两层：
 
-1. **Create 实体标签**：新增 `scgextra:create_seat_blacklist` 标签列出 71 个本模组生物，
-   `data/create/tags/entity_type/ignore_seat.json` 引用它（`#scgextra:cannot_use_seats`）；
+1. **Create 实体标签**：新增 `scgextra:cannot_use_seats` 标签列出 71 个本模组生物，
+   `data/create/tags/entity_type/ignore_seat.json` 引用它；
 2. **`EntityRideGuardMixin`**：在 `Entity#startRiding(Entity, boolean)` 入口拦截，
    只对 `scgextra:` 命名空间的生物生效，拒绝船、矿车和 `create:` 命名空间里名字带
    `seat` 的载具。
