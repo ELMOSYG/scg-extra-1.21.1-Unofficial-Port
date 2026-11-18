@@ -143,7 +143,7 @@ public class COGEntities {
                         .noDeathTilt()
         );
         EntityRenderers.register(COGEntities.DEVASTATOR.get(), (ctx) ->
-                new CogDevastatorRenderer(ctx, new net.zincstudios.scgextra.entity.cog.devastator.CogDevastatorModel())
+                new CogDevastatorRenderer(ctx, new DefaultedEntityGeoModel<>(SCGExtra.asResource("cog/cog_devastator"), "chest"))
                         .hasGlowLayer()
                         .noDeathTilt()
         );

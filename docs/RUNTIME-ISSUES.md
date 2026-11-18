@@ -734,14 +734,11 @@ Create 6.x 的 `SeatBlock#canBePickedUp` 允许把敌对生物塞进坐垫（取
 
 这样无论 Create 配置怎么改、玩家怎么用船推，本模组生物都不会被“控住”。
 
-### 3.24 毁灭者的炮塔头不锁定目标（已修复）
+### 3.24 毁灭者炮塔朝向（已回退，保持 4.0.0 原逻辑）
 
-`cog_devastator` 的炮塔网格其实挂在 **`chest`** 骨骼上（腿部 `leg.L/R` 才是履带，
-`head` 只是顶部小部件）。`DefaultedEntityGeoModel` 的第二个构造参数是 **headBone 名字**，
-所以原来的 `new DefaultedEntityGeoModel<>(..., "chest")` 已经让 GeckoLib 按实体头部朝向
-旋转 `chest` 了——只是方向与目标相反，看起来像“炮塔没锁定”。
+尝试过给 `cog_devastator` 单独做头部/炮塔锁定模型，但实测炮塔网格挂在 `chest` 骨骼上，
+且 `DefaultedEntityGeoModel` 的第二个构造参数本来就是 **headBone 名字**：
+原来的 `new DefaultedEntityGeoModel<>(..., "chest")` 已经在按实体头部朝向旋转炮塔。
 
-修复：新增客户端 `CogDevastatorModel`，在父类按 `EntityModelData` 旋转完 `chest` 之后，
-把 `chest` 的 **Y 轴旋转取反**；俯仰保留 GeckoLib 的 `headPitch`。`head` 不再单独旋转。
-
-渲染注册改为使用该模型。
+按需求回退到 4.0.0 原逻辑：移除自定义 `CogDevastatorModel`，渲染注册恢复为
+`new DefaultedEntityGeoModel<>(..., "chest")`。
