@@ -20,7 +20,8 @@
     "RaidSaveDataAccessor",
     "RecoilHandlerMixin",
     "SignalBeaconEntityMixin",
-    "ResourceOrTagKeyArgumentMixin"
+    "ResourceOrTagKeyArgumentMixin",
+    "EntityRideGuardMixin"
   ],
   "client": [
     "HeadshotBoxDebugRendererMixin"

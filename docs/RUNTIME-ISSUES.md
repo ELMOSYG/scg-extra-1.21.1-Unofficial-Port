@@ -717,3 +717,19 @@ GeckoLib 找不到动画就停在 T-pose。
 - 不再自带 `assets/scguns/lang/zh_cn.json`：scguns 的 jar 里已经带了完整社区汉化，
   覆盖它反而会造成同名键冲突；
 - 翻译脚本保留在 `tools/gen_zh_cn.py`，后续增删键可以直接重跑。
+
+### 3.23 生物被机械动力坐垫 / 船抓走（已修复）
+
+Create 6.x 的 `SeatBlock#canBePickedUp` 允许把敌对生物塞进坐垫（取决于服务端
+`seatHostileMobs` 配置），而 `SeatEntity`/原版船、矿车在 `startRiding` 层并不限制
+乘客类型。生物一旦被塞进去，Brain/Goal AI 会卡在骑乘状态，原地不动。
+
+修复做了两层：
+
+1. **Create 实体标签**：新增 `scgextra:create_seat_blacklist` 标签列出 71 个本模组生物，
+   `data/create/tags/entity_type/ignore_seat.json` 引用它（`#scgextra:cannot_use_seats`）；
+2. **`EntityRideGuardMixin`**：在 `Entity#startRiding(Entity, boolean)` 入口拦截，
+   只对 `scgextra:` 命名空间的生物生效，拒绝船、矿车和 `create:` 命名空间里名字带
+   `seat` 的载具。
+
+这样无论 Create 配置怎么改、玩家怎么用船推，本模组生物都不会被“控住”。

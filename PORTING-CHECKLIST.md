@@ -32,6 +32,7 @@
 | 阶段 9 数据与收尾 | ✅ 完成 | 合并源工程 `src/generated/resources` 的 **333 个 datagen 产物**（含缺失的 `warzone_biome.json`、`configured_feature`、`placed_feature`、刷怪蛋模型、战利品表）；1.21 数据包单数化（`advancement`/`loot_table`/`recipe`/`structure`、`tags/block|item|entity_type`、`neoforge/biome_modifier`）；配方 `result.item`→`result.id`；`forge:` 标签/loader/types → `neoforge:`/`c:` |
 | 最终状态 | ✅ | **474 个 Java 文件**，jar **15.64 MB**，`gradlew build` 通过；`data` 内：结构 150、战利品表 95、配方 55、进度 51、群系 1、模板池 51、结构 NBT 125、物品模型 147 |
 | 已知限制 | ⚠️ | ① 运行时未验证（离线缺 `moddev-config.json`）；② 上游只有 `en_us`，未生成 `zh_cn`（保持与上游一致）；③ Mixin 注入点需实机冒烟 |
+| 运行时修复（2026-11-18 第二十一次） | ✅ | 生物被 Create 坐垫/船抓走：新增 `create:ignore_seat` 实体标签（71 个生物）+ `EntityRideGuardMixin` 拒绝船/矿车/Create 坐垫 |
 | 运行时修复（2026-11-16 第二十次） | ✅ | 套装 tooltip 动态化（显示 N/4、按激活状态着色）+ 完整 `zh_cn`（scgextra 557 条、scguns 补充 34 条） |
 | 运行时修复（2026-11-15 第十九次） | ✅ | scguns 本体袭击掉蓝图前置材料：恢复上游 3.1.x 的 `data/scguns/loot_table/raids/` 覆盖表（copper/ocean 清空、fac 自定义） |
 | 运行时修复（2026-11-13 第十八次） | ✅ | 举枪移动 T-pose：`walk_holding_aim` 在 tallman/scrap_guard 动画里不存在，移动+瞄准统一改播 `walk`（CopperKnight/ScrapGuard/Tallman/Scout） |
