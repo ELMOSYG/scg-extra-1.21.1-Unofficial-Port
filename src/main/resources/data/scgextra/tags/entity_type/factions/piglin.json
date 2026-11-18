@@ -9,7 +9,8 @@
     "scgextra:pigdread",
     "scgextra:piglin_warboss",
     "scguns:hornlin",
-    "scguns:zombified_hornlin",
-    "scguns:mother_ghast"
+    "scguns:mother_ghast",
+    "minecraft:piglin",
+    "minecraft:piglin_brute"
   ]
 }
