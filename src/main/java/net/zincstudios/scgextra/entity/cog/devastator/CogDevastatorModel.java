@@ -1,7 +1,5 @@
 package net.zincstudios.scgextra.entity.cog.devastator;
 
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.zincstudios.scgextra.SCGExtra;
@@ -10,49 +8,35 @@ import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 /**
- * 毁灭者的头部是坦克炮塔造型：有目标时锁定目标方向，而不是跟着身体转。
+ * 毁灭者的“炮塔”其实挂在 {@code chest} 骨骼上（腿部才是履带，{@code head} 只是顶部小部件）。
  *
- * <p>服务端已经通过 {@code getLookControl().setLookAt(target, 90, 90)} 设置了
- * {@code yHeadRot}/{@code xRot}，但 GeckoLib 不会自动把头部骨骼按实体头部朝向旋转，
- * 所以这里在 {@code setCustomAnimations} 里手动旋转 {@code head} 骨骼。</p>
+ * <p>{@link DefaultedEntityGeoModel} 的第二个构造参数是 <b>headBone 名字</b>，不是 subtype；
+ * 所以原来的 {@code new DefaultedEntityGeoModel<>(..., "chest")} 实际上已经让 GeckoLib 把
+ * {@code chest} 当作头骨、按实体头部朝向旋转了——只是方向与目标相反，看起来像“不锁定”。</p>
  *
- * <p>客户端通过同步的 {@code TARGET_ID} 拿到目标实体，直接按双方位置计算世界朝向，
- * 再减去身体当前朝向，得到头部骨骼的局部旋转；没有目标时交给动画本身。</p>
+ * <p>这里在父类按 {@code EntityModelData} 旋转完 chest 之后，把 chest 的 Y/X 旋转取反，
+ * 让它真正指向目标；{@code head} 不再单独旋转，避免顶部小部件和炮塔脱节。</p>
  */
 @OnlyIn(Dist.CLIENT)
 public class CogDevastatorModel extends DefaultedEntityGeoModel<CogDevastatorEntity> {
 
-    /** head 骨骼 pivot 的 y 坐标约 43 像素，换算成世界高度。 */
-    private static final double HEAD_HEIGHT = 43.0D / 16.0D;
-
     public CogDevastatorModel() {
+        // 第二个参数是 headBone：炮塔在 chest 上
         super(SCGExtra.asResource("cog/cog_devastator"), "chest");
     }
 
     @Override
     public void setCustomAnimations(CogDevastatorEntity animatable, long instanceId,
                                     AnimationState<CogDevastatorEntity> animationState) {
+        // 父类会按 EntityModelData 的 netHeadYaw/headPitch 旋转 chest
         super.setCustomAnimations(animatable, instanceId, animationState);
 
-        GeoBone head = getAnimationProcessor().getBone("head");
-        if (head == null) {
+        GeoBone chest = getAnimationProcessor().getBone("chest");
+        if (chest == null) {
             return;
         }
 
-        LivingEntity target = animatable.getTarget();
-        if (target == null || !target.isAlive()) {
-            return; // 没目标时保留动画本身的头部动作
-        }
-
-        double dx = target.getX() - animatable.getX();
-        double dz = target.getZ() - animatable.getZ();
-        double dy = target.getEyeY() - (animatable.getY() + HEAD_HEIGHT);
-
-        float targetYaw = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
-        float yawOffset = Mth.wrapDegrees(targetYaw - animatable.getYRot());
-        float pitch = (float) (-(Mth.atan2(dy, Math.sqrt(dx * dx + dz * dz)) * Mth.RAD_TO_DEG));
-
-        head.setRotY(yawOffset * Mth.DEG_TO_RAD);
-        head.setRotX(Mth.clamp(pitch, -60.0F, 60.0F) * Mth.DEG_TO_RAD);
+        // 模型 chest 的 Y 轴与 MC yaw 方向相反；只翻转水平旋转，俯仰保持 GeckoLib 的 headPitch
+        chest.setRotY(-chest.getRotY());
     }
 }
