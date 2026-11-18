@@ -733,3 +733,18 @@ Create 6.x 的 `SeatBlock#canBePickedUp` 允许把敌对生物塞进坐垫（取
    `seat` 的载具。
 
 这样无论 Create 配置怎么改、玩家怎么用船推，本模组生物都不会被“控住”。
+
+### 3.24 毁灭者的炮塔头不锁定目标（已修复）
+
+`cog_devastator` 的模型头部是坦克炮塔造型。服务端已经在 AI 里调用
+`getLookControl().setLookAt(target, 90, 90)` 设置了头部朝向，但 GeckoLib 不会自动把
+`head` 骨骼按实体的 `yHeadRot` 旋转，所以视觉上头部始终跟着身体。
+
+修复：新增客户端 `CogDevastatorModel`，在 `setCustomAnimations` 里覆盖 `head` 骨骼：
+
+- 客户端通过同步的 `TARGET_ID` 解析出目标；
+- 用双方位置计算世界偏航/俯仰，再减去身体朝向得到骨骼局部旋转；
+- 没有目标时不覆盖，保留待机动画的头部动作。
+
+渲染注册改为使用该模型（原来的 `DefaultedEntityGeoModel(..., "chest")` 换成
+`CogDevastatorModel`）。
