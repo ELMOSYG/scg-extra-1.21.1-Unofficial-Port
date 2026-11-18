@@ -14,6 +14,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import net.zincstudios.scgextra.entity.asgharian.SimpleGunAttackGoal;
 import top.ribs.scguns.entity.ai.GunAttackGoal;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.level.ServerLevelAccessor;
+import top.ribs.scguns.config.GunnerMobSpawner;
 
 // TODO: consider synced data for target entity too.
 // If so, consider updating client-side rotation to look at the target to mitigate minecraft's shitty ai look controls.
@@ -92,6 +97,18 @@ public abstract class GunnerEntity extends EquippedEntity {
 
     public Vec3 getProjectileSpawnOffset() {
         return Vec3.ZERO;
+    }
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
+                                        SpawnGroupData spawnData) {
+        SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData);
+        // 兜底：RRC 等 GunnerEntity 子类自身不注册枪战 goal，依赖 scguns 在出生后自动注入。
+        // 这里在装备已经穿好之后立即再评估一次，避免出生 40 tick 内被打断/时序问题导致永远没有枪战 AI。
+        if (!this.level().isClientSide()) {
+            GunnerMobSpawner.reassessWeaponGoal(this);
+        }
+        return data;
     }
 
     @Override
