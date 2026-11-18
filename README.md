@@ -12,7 +12,7 @@
 | Minecraft | 1.21.1 |
 | NeoForge | 21.1.249+（当前构建基线） |
 | Java | 21 |
-| Scorched Guns（scguns） | 1.1.0+ —— [ELMOSYG 的 0.5.5 1.21.1 非官方移植](https://github.com/ELMOSYG/scorched-guns-0.5.5-Unofficial-Port)，本仓库 `libs/scguns-1.1.0hotfix.jar` |
+| Scorched Guns（scguns） | 1.1.2（当前整合包版本）—— [ELMOSYG 的 0.5.5 1.21.1 非官方移植](https://github.com/ELMOSYG/scorched-guns-0.5.5-Unofficial-Port)，本仓库 `libs/scguns-1.1.2.jar` |
 | Framework | 0.13.11+ |
 | GeckoLib | 4.9.3+ |
 | Curios | 9.5.1+ |
