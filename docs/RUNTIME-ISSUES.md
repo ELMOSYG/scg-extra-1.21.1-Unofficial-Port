@@ -736,15 +736,12 @@ Create 6.x 的 `SeatBlock#canBePickedUp` 允许把敌对生物塞进坐垫（取
 
 ### 3.24 毁灭者的炮塔头不锁定目标（已修复）
 
-`cog_devastator` 的模型头部是坦克炮塔造型。服务端已经在 AI 里调用
-`getLookControl().setLookAt(target, 90, 90)` 设置了头部朝向，但 GeckoLib 不会自动把
-`head` 骨骼按实体的 `yHeadRot` 旋转，所以视觉上头部始终跟着身体。
+`cog_devastator` 的炮塔网格其实挂在 **`chest`** 骨骼上（腿部 `leg.L/R` 才是履带，
+`head` 只是顶部小部件）。`DefaultedEntityGeoModel` 的第二个构造参数是 **headBone 名字**，
+所以原来的 `new DefaultedEntityGeoModel<>(..., "chest")` 已经让 GeckoLib 按实体头部朝向
+旋转 `chest` 了——只是方向与目标相反，看起来像“炮塔没锁定”。
 
-修复：新增客户端 `CogDevastatorModel`，在 `setCustomAnimations` 里覆盖 `head` 骨骼：
+修复：新增客户端 `CogDevastatorModel`，在父类按 `EntityModelData` 旋转完 `chest` 之后，
+把 `chest` 的 **Y 轴旋转取反**；俯仰保留 GeckoLib 的 `headPitch`。`head` 不再单独旋转。
 
-- 客户端通过同步的 `TARGET_ID` 解析出目标；
-- 用双方位置计算世界偏航/俯仰，再减去身体朝向得到骨骼局部旋转；
-- 没有目标时不覆盖，保留待机动画的头部动作。
-
-渲染注册改为使用该模型（原来的 `DefaultedEntityGeoModel(..., "chest")` 换成
-`CogDevastatorModel`）。
+渲染注册改为使用该模型。
