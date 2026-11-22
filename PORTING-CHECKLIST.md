@@ -211,7 +211,7 @@
   mod_name=SCG Extra
   mod_license=GPL-3.0-or-later
   # 建议沿用隔壁 scguns 移植的版本策略：本移植版 1.0.0 + 上游 4.0.0
-  mod_version=1.0.0+4.0.0
+  mod_version=1.21+4.1.0
   mod_group_id=net.zincstudios.scgextra
   ```
 
@@ -233,7 +233,7 @@
 - [ ] **删除模板残留**：`com/example/examplemod/*`、`assets/examplemod/`、模板说明文字。
 - [ ] **补 `LICENSE`（GPL-3.0）与 `CREDITS.txt`**：目标目录现在两个都没有；GPL 合规是硬要求。
 - [ ] **README**：写明“移植自 SCG Extra（GPL-3.0）”，保留原作者署名（Zinc Studios、Daragetsu、Krei、Funado、Nope）。
-- [ ] **验收**：`gradlew build` 产出 `build/libs/scgextra-1.0.0+4.0.0.jar`；`gradlew runClient` 能进主菜单；jar 内 `META-INF/neoforge.mods.toml` 的 modId 是 `scgextra`。
+- [ ] **验收**：`gradlew build` 产出 `build/libs/scgextra-1.21+4.1.0.jar`；`gradlew runClient` 能进主菜单；jar 内 `META-INF/neoforge.mods.toml` 的 modId 是 `scgextra`。
 
 ---
 
@@ -409,7 +409,7 @@
 
 ## 7. 提交前验收
 
-- [ ] `gradlew build` 在本机离线可重复成功，产物 `build/libs/scgextra-1.0.0+4.0.0.jar`。
+- [ ] `gradlew build` 在本机离线可重复成功，产物 `build/libs/scgextra-1.21+4.1.0.jar`。
 - [ ] jar 内：`META-INF/neoforge.mods.toml`（modId=scgextra）、`scgextra.mixins.json`、`LICENSE`、`CREDITS.txt`。
 - [ ] 无 `com/example/examplemod`、无 `assets/examplemod` 残留。
 - [ ] `grep -r "net.minecraftforge" src` 为空。

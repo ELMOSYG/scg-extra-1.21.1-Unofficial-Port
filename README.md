@@ -1,6 +1,6 @@
 # SCG Extra — 1.21.1 / NeoForge 非官方移植版
 
-[SCG Extra](https://www.curseforge.com/minecraft/mc-mods/scg-extra) 4.0.0 的非官方 **Minecraft 1.21.1 / NeoForge** 移植。
+[SCG Extra](https://www.curseforge.com/minecraft/mc-mods/scg-extra) 4.1.0 的非官方 **Minecraft 1.21.1 / NeoForge** 移植。
 原工程基于 Forge 1.20.1（47.4.x），作者 **Zinc Studios**（Daragetsu、Krei、Funado、Nope）。
 
 > 本移植版按上游的 **GPL-3.0** 发布。原始 `LICENSE` 保留在仓库根目录；源码与二进制同样受 GPL-3.0 约束。
