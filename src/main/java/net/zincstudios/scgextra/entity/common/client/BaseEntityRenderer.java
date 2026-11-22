@@ -77,7 +77,7 @@ public class BaseEntityRenderer<T extends LivingEntity & GeoEntity> extends GeoE
             // TODO: check difference with the super method
             @Override
             public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-                RenderType emissiveRenderType = getRenderType(animatable);
+                RenderType emissiveRenderType = software.bernie.geckolib.cache.texture.AutoGlowingTexture.getRenderType(getRenderer().getTextureLocation(animatable));
                 getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, emissiveRenderType, bufferSource.getBuffer(emissiveRenderType),
                         partialTick, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF
                 );

@@ -24,7 +24,7 @@ public class EndDwellerRenderer<T extends EndDwellerEntity> extends BaseEntityRe
             @Override
             public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType,
                                MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-                RenderType emissiveRenderType = getRenderType(animatable);
+                RenderType emissiveRenderType = software.bernie.geckolib.cache.texture.AutoGlowingTexture.getRenderType(getRenderer().getTextureLocation(animatable));
                 if (animatable.isCharging()) {
                     getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, emissiveRenderType, bufferSource.getBuffer(emissiveRenderType),
                             partialTick, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0xFFFF0000);

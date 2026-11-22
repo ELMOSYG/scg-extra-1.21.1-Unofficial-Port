@@ -45,7 +45,7 @@ public class WreckerHelicubeRenderer extends GeoEntityRenderer<WreckerHelicubeEn
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
             @Override
             public void render(PoseStack poseStack, WreckerHelicubeEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-                RenderType emissiveRenderType = getRenderType(animatable);
+                RenderType emissiveRenderType = software.bernie.geckolib.cache.texture.AutoGlowingTexture.getRenderType(getRenderer().getTextureLocation(animatable));
 		        getRenderer().reRender(
                     bakedModel,
                     poseStack,

@@ -33,7 +33,7 @@ public class GunnerRenderer <T extends GunnerEntity & GeoEntity> extends GeoEnti
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
             @Override
             public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-                RenderType emissiveRenderType = getRenderType(animatable);
+                RenderType emissiveRenderType = software.bernie.geckolib.cache.texture.AutoGlowingTexture.getRenderType(getRenderer().getTextureLocation(animatable));
 		        getRenderer().reRender(
                     bakedModel,
                     poseStack,
@@ -58,7 +58,7 @@ public class GunnerRenderer <T extends GunnerEntity & GeoEntity> extends GeoEnti
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
             @Override
             public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-                RenderType emissiveRenderType = getRenderType(animatable);
+                RenderType emissiveRenderType = software.bernie.geckolib.cache.texture.AutoGlowingTexture.getRenderType(getRenderer().getTextureLocation(animatable));
 		        getRenderer().reRender(
                     bakedModel,
                     poseStack,
@@ -84,7 +84,7 @@ public class GunnerRenderer <T extends GunnerEntity & GeoEntity> extends GeoEnti
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
             @Override
             public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-                RenderType emissiveRenderType = getRenderType(animatable);
+                RenderType emissiveRenderType = software.bernie.geckolib.cache.texture.AutoGlowingTexture.getRenderType(getRenderer().getTextureLocation(animatable));
 		        getRenderer().reRender(
                     bakedModel,
                     poseStack,
