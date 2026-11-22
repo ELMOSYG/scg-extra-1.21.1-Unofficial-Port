@@ -43,10 +43,12 @@ public class ModBlocks {
     public static final DeferredHolder<Item, Item> WRECKER_TURRET_ITEM = ModItems.ITEMS.register("wrecker_turret",
             () -> new BlockItem(WRECKER_TURRET.get(), new Item.Properties()));
 
-    public static final DeferredHolder<Block, Block> WARZONE_SPRUCE_SAPLING = registerBlock("warzone_spruce_sapling",
+    public static final DeferredHolder<Block, Block> WARZONE_SPRUCE_SAPLING = BLOCKS.register("warzone_spruce_sapling",
             () -> new net.minecraft.world.level.block.SaplingBlock(
                     net.zincstudios.scgextra.worldgen.tree.WarzoneSpruceTreeGrower.WARZONE_SPRUCE,
                     BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)));
+    public static final DeferredHolder<Item, Item> WARZONE_SPRUCE_SAPLING_ITEM = ModItems.ITEMS.register("warzone_spruce_sapling",
+            () -> new BlockItem(WARZONE_SPRUCE_SAPLING.get(), new Item.Properties()));
 
     private static <T extends Block> DeferredHolder<Block, T> registerBlock(String name, Supplier<T> block) {
         DeferredHolder<Block, T> toReturn = BLOCKS.register(name, block);

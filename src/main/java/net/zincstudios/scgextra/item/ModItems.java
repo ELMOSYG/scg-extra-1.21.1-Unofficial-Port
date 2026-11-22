@@ -380,8 +380,9 @@ public class ModItems {
 
     private static void buildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CREATIVE_TAB.getKey()) {
-            Set<DeferredHolder<Item, GunItem>> notInTab = Set.of(  // Turn to DeferredHolder<Item, Item> later
-                    PLACEHOLDER_GUN
+            Set<DeferredHolder<Item, ? extends Item>> notInTab = Set.of(
+                    PLACEHOLDER_GUN,
+                    net.zincstudios.scgextra.block.ModBlocks.WARZONE_SPRUCE_SAPLING_ITEM
             );
 
             ITEMS.getEntries().stream()
