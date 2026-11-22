@@ -79,8 +79,16 @@ public class CommonConfig {
             .defineInRange("abilityWeaknessHealthThreshold", 100, 1.0, 100);
 
     public static final ModConfigSpec.IntValue WARZONE_SPAWN_WEIGHT = BUILDER
-            .comment("spawn weight for the warzone biome")
-            .defineInRange("warzoneSpawnWeight", 10, 1, 1000);
+            .comment("spawn weight for the warzone biome (lower = rarer)")
+            .defineInRange("warzoneSpawnWeight", 5, 1, 1000);
+
+    public static final ModConfigSpec.DoubleValue WARZONE_SPAWN_RANGE_SCALE = BUILDER
+            .comment("""
+                scales the climate parameter spans around their midpoints.
+                1.0 = use the full configured min/max range (upstream behavior);
+                0.5 = half-size climate window, much smaller patches.
+                """)
+            .defineInRange("warzoneSpawnRangeScale", 0.5, 0.05, 1.0);
 
     public static final ModConfigSpec.DoubleValue WARZONE_SPAWN_MINIMUM_TEMPERATURE = BUILDER
             .comment("""
@@ -161,6 +169,7 @@ public class CommonConfig {
     public static double abilityWeaknessDamageMult;
     public static double abilityWeaknessMinHealth;
     public static int warzoneSpawnWeight;
+    public static double warzoneSpawnRangeScale;
     public static double warzoneSpawnMaxTemp;
     public static double warzoneSpawnMinTemp;
     public static double warzoneSpawnMaxHumidity;
@@ -194,6 +203,7 @@ public class CommonConfig {
         abilityWeaknessMinHealth = ABILITY_WEAKNESS_MIN.get();
 
         warzoneSpawnWeight = WARZONE_SPAWN_WEIGHT.get();
+        warzoneSpawnRangeScale = WARZONE_SPAWN_RANGE_SCALE.get();
         warzoneSpawnMaxTemp = WARZONE_SPAWN_MAXIMUM_TEMPERATURE.get();
         warzoneSpawnMinTemp = WARZONE_SPAWN_MINIMUM_TEMPERATURE.get();
         warzoneSpawnMaxHumidity = WARZONE_SPAWN_MAXIMUM_HUMIDITY.get();

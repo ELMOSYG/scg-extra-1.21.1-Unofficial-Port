@@ -21,45 +21,27 @@ public ModOverworldRegion(ResourceLocation name, int weight) {
         super(name, RegionType.OVERWORLD, weight);
     }
 
+    private static Parameter scaledSpan(double min, double max) {
+        double scale = CommonConfig.warzoneSpawnRangeScale;
+        double center = (min + max) / 2.0D;
+        double half = (max - min) / 2.0D * scale;
+        return Parameter.span((float) (center - half), (float) (center + half));
+    }
+
     @Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
             VanillaParameterOverlayBuilder builder = new VanillaParameterOverlayBuilder();
 
             new ParameterUtils.ParameterPointListBuilder()
-                    .temperature(
-                        Parameter.span(
-                            (float)CommonConfig.warzoneSpawnMinTemp,
-                            (float)CommonConfig.warzoneSpawnMaxTemp 
-                        )
-                    )
-                    .humidity(
-                        Parameter.span(
-                            (float)CommonConfig.warzoneSpawnMinHumidity,
-                            (float)CommonConfig.warzoneSpawnMaxHumidity 
-                        )
-                    )
-                    .continentalness(
-                        Parameter.span(
-                            (float)CommonConfig.warzoneSpawnMinContinentalness,
-                            (float)CommonConfig.warzoneSpawnMaxContinentalness 
-                        )
-                    )
-                    .erosion(
-                        Parameter.span(
-                            (float)CommonConfig.warzoneSpawnMinErosion,
-                            (float)CommonConfig.warzoneSpawnMaxErosion 
-                        )
-                    )
+                    .temperature(scaledSpan(CommonConfig.warzoneSpawnMinTemp, CommonConfig.warzoneSpawnMaxTemp))
+                    .humidity(scaledSpan(CommonConfig.warzoneSpawnMinHumidity, CommonConfig.warzoneSpawnMaxHumidity))
+                    .continentalness(scaledSpan(CommonConfig.warzoneSpawnMinContinentalness, CommonConfig.warzoneSpawnMaxContinentalness))
+                    .erosion(scaledSpan(CommonConfig.warzoneSpawnMinErosion, CommonConfig.warzoneSpawnMaxErosion))
                     .depth(
                         ParameterUtils.Depth.SURFACE, 
                         ParameterUtils.Depth.FLOOR
                     )
-                    .weirdness(
-                        Parameter.span(
-                            (float)CommonConfig.warzoneSpawnMinWeirdness,
-                            (float)CommonConfig.warzoneSpawnMaxWeirdness 
-                        )
-                    )
+                    .weirdness(scaledSpan(CommonConfig.warzoneSpawnMinWeirdness, CommonConfig.warzoneSpawnMaxWeirdness))
                     .build().forEach(
                         point -> builder.add(
                             point, 
