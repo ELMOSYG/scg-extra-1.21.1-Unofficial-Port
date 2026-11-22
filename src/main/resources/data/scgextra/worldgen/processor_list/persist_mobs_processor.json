@@ -1,0 +1,7 @@
+{
+  "processors": [
+    {
+      "processor_type": "scgextra:persist_mobs_processor"
+    }
+  ]
+}

@@ -11,6 +11,9 @@
         "processors": [
           {
             "processor_type": "scgextra:warship_processor"
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ]
       }
@@ -24,6 +27,9 @@
         "processors": [
           {
             "processor_type": "scgextra:warship_processor"
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ]
       }

@@ -2,6 +2,7 @@ package net.zincstudios.scgextra.worldgen.structure;
 
 import net.zincstudios.scgextra.SCGExtra;
 import net.zincstudios.scgextra.worldgen.structure.processors.CogFactoryProcessor;
+import net.zincstudios.scgextra.worldgen.structure.processors.MobPersistProcessor;
 import net.zincstudios.scgextra.worldgen.structure.processors.WarshipProcessor;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
@@ -14,6 +15,9 @@ public class ModStructureProcessors {
             .create(Registries.STRUCTURE_PROCESSOR, SCGExtra.MOD_ID);
 
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<CogFactoryProcessor>> COG_FACTORY_PROCESSOR = STRUCTURE_PROCESSOR_TYPES.register("cog_factory_processor", ()->()->CogFactoryProcessor.CODEC);
+    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<MobPersistProcessor>> MOB_PERSISTENCE_PROCESSOR =
+            STRUCTURE_PROCESSOR_TYPES.register("persist_mobs_processor", () -> () -> MobPersistProcessor.CODEC);
+
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<WarshipProcessor>> WARSHIP_PROCESSOR = STRUCTURE_PROCESSOR_TYPES.register("warship_processor", ()->()->WarshipProcessor.CODEC);
 
     public static void register(IEventBus modEventBus) {

@@ -66,6 +66,9 @@ public class SCGExtra
         NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.entity.Faction::onTagsUpdated);
         NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.data.RaidDataLoader::onAddReloadListeners);
         NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.debug.DevTestCommands::registerCommands);
+        NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.SpawnEventHandler::onCheckSpawn);
+        NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.SpawnEventHandler::onFinalizeSpawn);
+        NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.SpawnEventHandler::onExplosionDetonate);
 
         // TODO(阶段 9): DataGenerators。
     }

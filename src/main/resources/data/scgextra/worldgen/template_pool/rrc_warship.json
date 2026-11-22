@@ -8,7 +8,14 @@
         "element_type": "minecraft:single_pool_element",
         "projection": "rigid",
         "location": "scgextra:rrc_warship/rrc_warship_back",
-        "processors": "scgextra:warship_processor"
+        "processors": [
+            {
+              "processor_type": "scgextra:warship_processor"
+            },
+            {
+              "processor_type": "scgextra:persist_mobs_processor"
+            }
+        ]
       }
     },
     {
@@ -17,7 +24,14 @@
         "element_type": "minecraft:single_pool_element",
         "projection": "rigid",
         "location": "scgextra:rrc_warship/rrc_warship_front",
-        "processors": "scgextra:warship_processor"
+        "processors": [
+            {
+              "processor_type": "scgextra:warship_processor"
+            },
+            {
+              "processor_type": "scgextra:persist_mobs_processor"
+            }
+        ]
       }
     }
   ]

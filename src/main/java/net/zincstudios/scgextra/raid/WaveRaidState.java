@@ -178,7 +178,7 @@ public class WaveRaidState {
                 }
 
                 mob.setPersistenceRequired();
-                boolean finalize = raidData.handleRaiderEdgeCase(mob);
+                boolean finalize = raidData.handleRaiderEdgeCase(mob, entry, target);
                 if (finalize) {
                     EventHooks.finalizeMobSpawn(
                             mob, level,

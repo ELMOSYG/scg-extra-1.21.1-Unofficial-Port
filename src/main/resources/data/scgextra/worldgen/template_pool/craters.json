@@ -11,6 +11,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -7
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -26,6 +29,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -5
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -41,6 +47,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -5
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -56,6 +65,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -5
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -71,6 +83,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -7
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -86,6 +101,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -5
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -101,6 +119,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -5
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -116,6 +137,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -6
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -131,6 +155,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -146,6 +173,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -161,6 +191,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -176,6 +209,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -191,6 +227,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -206,6 +245,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -221,6 +263,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -236,6 +281,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -251,6 +299,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -266,6 +317,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -1
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -281,6 +335,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -296,6 +353,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -311,6 +371,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -326,6 +389,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -341,6 +407,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -356,6 +425,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -371,6 +443,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -386,6 +461,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -3
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -401,6 +479,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -3
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",
@@ -416,6 +497,9 @@
             "processor_type": "minecraft:gravity",
             "heightmap": "WORLD_SURFACE",
             "offset": -2
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
           }
         ],
         "projection": "rigid",

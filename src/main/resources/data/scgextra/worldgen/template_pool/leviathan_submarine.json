@@ -8,7 +8,14 @@
         "element_type": "minecraft:single_pool_element",
         "projection": "rigid",
         "location": "scgextra:leviathan_submarine/leviathan_submarine",
-        "processors": "scgextra:warship_processor"
+        "processors": [
+            {
+              "processor_type": "scgextra:warship_processor"
+            },
+            {
+              "processor_type": "scgextra:persist_mobs_processor"
+            }
+        ]
       }
     }
   ]

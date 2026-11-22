@@ -209,15 +209,20 @@ public record WaveRaidData(
         return Component.translatable(SCGExtra.MOD_ID+".raid.announcement."+this.id);
     }
 
-    public boolean handleRaiderEdgeCase(Mob mob) {
+    public boolean handleRaiderEdgeCase(Mob mob, RaiderEntry entry, @Nullable LivingEntity target) {
         if (mob instanceof DissidentEntity) {
             return false;
         }
-        
+
         WaveRaidData.forceRespirator(mob);
 
         if (mob instanceof MotherGhastEntity) {
             mob.setPos(mob.position().add(0, 20, 0));
+        }
+
+        // 原版猪灵 / 猪灵蛮兵不认 raid 的目标，给它们补一个“走向目标玩家”的 goal
+        if (mob.getType() == EntityType.PIGLIN || mob.getType() == EntityType.PIGLIN_BRUTE) {
+            mob.goalSelector.addGoal(0, new net.zincstudios.scgextra.entity.common.goal.MoveToRaidTargetGoal(mob, target));
         }
 
         return true;

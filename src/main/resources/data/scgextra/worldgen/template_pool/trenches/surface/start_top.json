@@ -23,6 +23,12 @@
                 }
               }
             ]
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
+          },
+          {
+            "processor_type": "scgextra:warship_processor"
           }
         ],
         "projection": "rigid",
@@ -50,6 +56,12 @@
                 }
               }
             ]
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
+          },
+          {
+            "processor_type": "scgextra:warship_processor"
           }
         ],
         "projection": "rigid",
@@ -77,6 +89,12 @@
                 }
               }
             ]
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
+          },
+          {
+            "processor_type": "scgextra:warship_processor"
           }
         ],
         "projection": "rigid",
@@ -104,6 +122,12 @@
                 }
               }
             ]
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
+          },
+          {
+            "processor_type": "scgextra:warship_processor"
           }
         ],
         "projection": "rigid",
@@ -131,6 +155,12 @@
                 }
               }
             ]
+          },
+          {
+            "processor_type": "scgextra:persist_mobs_processor"
+          },
+          {
+            "processor_type": "scgextra:warship_processor"
           }
         ],
         "projection": "rigid",
