@@ -40,7 +40,18 @@ public class BaseArmorSetPartRenderer extends GeoArmorRenderer<GeoArmorSetPartIt
         PlayerRenderer renderer = event.getRenderer();
         PlayerModel<AbstractClientPlayer> model = renderer.getModel();
         if (event.getEntity().getItemBySlot(EquipmentSlot.HEAD).getItem() == ModItems.COMMISSAR_HELMET.get()) {
+            // 同时隐藏内层头部和 1.8+ 双层皮肤的外层 hat，否则外层皮肤会从政委头盔里穿出来。
             model.head.visible = false;
+            model.hat.visible = false;
         }
+    }
+
+    @OnlyIn(value = Dist.CLIENT)
+    public static void restoreHeadAfterCommissarHelmet(RenderPlayerEvent.Post event) {
+        PlayerRenderer renderer = event.getRenderer();
+        PlayerModel<AbstractClientPlayer> model = renderer.getModel();
+        // Pre 里改的是共享的 PlayerModel，必须在 Post 恢复，否则别的玩家/后续帧会一直少头。
+        model.head.visible = true;
+        model.hat.visible = true;
     }
 }

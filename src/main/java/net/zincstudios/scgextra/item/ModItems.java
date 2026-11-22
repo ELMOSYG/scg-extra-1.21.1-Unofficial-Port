@@ -364,6 +364,7 @@ public class ModItems {
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             NeoForge.EVENT_BUS.addListener(BaseArmorSetPartRenderer::hideHeadWithCommissarHelmet);
+            NeoForge.EVENT_BUS.addListener(BaseArmorSetPartRenderer::restoreHeadAfterCommissarHelmet);
         }
     }
 
