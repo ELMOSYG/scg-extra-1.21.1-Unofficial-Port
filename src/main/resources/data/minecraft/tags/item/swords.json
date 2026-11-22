@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "scgextra:atlantic_mace",
+    "scgextra:cavalry_saber",
+    "scgextra:spear_shovel",
+    "scgextra:wrecker_sledge_hammer",
+    "scgextra:wrecking_tool"
+  ]
+}
