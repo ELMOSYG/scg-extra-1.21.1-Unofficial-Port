@@ -56,7 +56,15 @@ public class NetheriteChainAxeItem extends AxeItem implements HurtEffects, GeoIt
             attacker.level().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), AsgharianSounds.ASGHAR_WORKER_SAW.get(), SoundSource.NEUTRAL, 1F, 1F);
         }
         this.hurtEffect(stack, target, attacker);
-        target.hurt(attacker.damageSources().mobAttack(attacker), 11);
+        if (!attacker.level().isClientSide() && target.isAlive()) {
+            // 1.21 的受击无敌帧会吞掉紧随主攻击之后的第二次 hurt。
+            // 链锯的“额外 11 点伤害”必须绕开主攻击留下的无敌帧才真正生效。
+            target.invulnerableTime = 0;
+            net.minecraft.world.damagesource.DamageSource source = attacker instanceof net.minecraft.world.entity.player.Player player
+                    ? attacker.damageSources().playerAttack(player)
+                    : attacker.damageSources().mobAttack(attacker);
+            target.hurt(source, 11.0F);
+        }
         stack.hurtAndBreak(2, attacker, EquipmentSlot.MAINHAND);
         return true;
     }
