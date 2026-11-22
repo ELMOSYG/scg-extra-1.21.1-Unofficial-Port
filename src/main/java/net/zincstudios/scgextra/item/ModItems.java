@@ -62,15 +62,15 @@ public class ModItems {
     );
 
     public static final DeferredHolder<Item, CavalrySaberItem> CAVALRY_SABER = ITEMS.register("cavalry_saber",
-            () -> new CavalrySaberItem(Tiers.IRON, 3, -2.2F, new Item.Properties())
+            () -> new CavalrySaberItem(ModTiers.ANTHRALITE, 3, -2.2F, new Item.Properties())
     );
 
     public static final DeferredHolder<Item, NetheriteChainAxeItem> NETHERITE_CHAIN_AXE = ITEMS.register("netherite_chain_axe",
-        () -> new NetheriteChainAxeItem(ModTiers.ANTHRALITE, 7.5F, -3F, new Item.Properties().durability(300))
+        () -> new NetheriteChainAxeItem(Tiers.NETHERITE, 7.5F, -3F, new Item.Properties())
     );
 
     public static final DeferredHolder<Item, SpearShovelItem> SPEAR_SHOVEL = ITEMS.register("spear_shovel",
-            () -> new SpearShovelItem(Tiers.IRON, 2.5F, -2.8F, new Item.Properties())
+            () -> new SpearShovelItem(ModTiers.ANTHRALITE, 2.5F, -2.8F, new Item.Properties())
     );
 
     public static final DeferredHolder<Item, WreckingToolItem> WRECKING_TOOL = ITEMS.register("wrecking_tool",
