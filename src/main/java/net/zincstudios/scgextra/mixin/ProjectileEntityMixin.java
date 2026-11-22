@@ -50,7 +50,7 @@ public class ProjectileEntityMixin {
     private double atGetModifiedGravity(ItemStack weapon, double gravity, Operation<Double> original, @Local(argsOnly = true) LivingEntity shooter) {
         double modifiedGravity = original.call(weapon, gravity);
         if (shooter instanceof Player player) {
-            modifiedGravity *= (float) (1+(player.getAttributeValue(SCGEAttributes.BULLET_GRAVITY_MULT)/100));
+            modifiedGravity *= player.getAttributeValue(SCGEAttributes.BULLET_GRAVITY);
         }
         return modifiedGravity;
     }
@@ -65,7 +65,7 @@ public class ProjectileEntityMixin {
         ProjectileEntity self = (ProjectileEntity) (Object) this;
         float chance = original.call(weapon);
         if (self.getShooter() instanceof Player player) {
-            chance += (float) ((player.getAttributeValue(SCGEAttributes.BULLET_ADDITIONAL_CRIT_CHANCE)/100));
+            chance += (float) player.getAttributeValue(SCGEAttributes.BULLET_ADDITIONAL_CRIT_CHANCE);
             return Mth.clamp(chance, 0, 1);
         }
         return chance;
@@ -79,8 +79,9 @@ public class ProjectileEntityMixin {
     private float atGetCritDamageMultiplier(Gun.Projectile instance, Operation<Float> original) {
         ProjectileEntity self = (ProjectileEntity) (Object) this;
         float damage = original.call(instance);
-        if (self.getShooter() instanceof Player player && (player.getAttributeValue(SCGEAttributes.BULLET_ADDITIONAL_CRIT_DAMAGE_MULT)/100)>0.0) {
-            damage *= (float) (1+(player.getAttributeValue(SCGEAttributes.BULLET_ADDITIONAL_CRIT_DAMAGE_MULT)/100));
+        double critDamage = self.getShooter() instanceof Player player ? player.getAttributeValue(SCGEAttributes.BULLET_ADDITIONAL_CRIT_DAMAGE_MULT) : 0.0D;
+        if (critDamage > 0.0D) {
+            damage *= (float) (1.0D + critDamage);
             return damage;
         }
         return damage;

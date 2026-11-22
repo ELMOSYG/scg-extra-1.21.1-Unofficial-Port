@@ -4,150 +4,191 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.zincstudios.scgextra.attributes.SCGEAttributes;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
+/**
+ * 4.1.0 的护甲套装系统：直接扫描已穿件数，按 full/half traits 应用属性与效果；
+ * 每件护甲自己的 partModifiers 由 {@link ArmorSetPartItem} 负责。
+ */
 public class ArmorSet {
 
     public static final int TICK_INTERVAL = 10;
     private static final Map<ResourceLocation, Holder<Attribute>> ALL_MODIFIER_ATTRIBUTES = new HashMap<>();
 
     private final ResourceLocation resLoc;
-    private final Map<Holder<Attribute>, AttributeModifier> modifiers;
-    private final Map<Holder<MobEffect>, Integer> effects;
-    private final Set<Holder<MobEffect>> resistances;
+    private final Traits fullSetTraits;
+    private final Traits halfSetTraits;
+    private final Map<Holder<Attribute>, AttributeModifier> partModifiers;
 
-    public ArmorSet(ResourceLocation resLoc, ArmorSet.Traits traits) {
+    public ArmorSet(ResourceLocation resLoc, Traits fullSetTraits) {
+        this(resLoc, fullSetTraits, new Traits(), Map.of());
+    }
+
+    public ArmorSet(ResourceLocation resLoc, Traits fullSetTraits, Traits halfSetTraits,
+                    Map<Holder<Attribute>, AttributeModifier> partModifiers) {
         this.resLoc = resLoc;
-        this.modifiers = Map.copyOf(traits.modifiers);
-        this.effects = Map.copyOf(traits.effects);
-        this.resistances = Set.copyOf(traits.resistances);
-        for (Map.Entry<Holder<Attribute>, AttributeModifier> e : traits.modifiers.entrySet()) {
-            ALL_MODIFIER_ATTRIBUTES.put(e.getValue().id(), e.getKey());
+        this.fullSetTraits = fullSetTraits;
+        this.halfSetTraits = halfSetTraits;
+        this.partModifiers = partModifiers;
+
+        registerModifierHandler(fullSetTraits);
+        registerModifierHandler(halfSetTraits);
+        for (Map.Entry<Holder<Attribute>, AttributeModifier> entry : partModifiers.entrySet()) {
+            ALL_MODIFIER_ATTRIBUTES.put(entry.getValue().id(), entry.getKey());
         }
     }
 
-    // Only ticks every interval and on server side
-    public void onTick(LivingEntity entity) {
-        Map<ResourceLocation, AttributeModifier> desiredModifiers = new HashMap<>();
-
-        ArmorSet armorSet = getArmorSet(entity);
-        if (armorSet != null) {
-            for (Map.Entry<Holder<Attribute>, AttributeModifier> entry : armorSet.modifiers.entrySet()) {
-                desiredModifiers.put(entry.getValue().id(), entry.getValue());
-            }
-            for (Map.Entry<Holder<MobEffect>, Integer> entry : armorSet.effects.entrySet()) {
-                entity.addEffect(new MobEffectInstance(entry.getKey(), 115, entry.getValue(), true, true));
-            }
-            for (Holder<MobEffect> effect : armorSet.resistances) {
-                entity.removeEffect(effect);
-            }
+    private static void registerModifierHandler(Traits traits) {
+        for (Map.Entry<Holder<Attribute>, AttributeModifier> entry : traits.modifiers.entrySet()) {
+            ALL_MODIFIER_ATTRIBUTES.put(entry.getValue().id(), entry.getKey());
         }
+    }
 
-        for (Map.Entry<ResourceLocation, Holder<Attribute>> entry : ALL_MODIFIER_ATTRIBUTES.entrySet()) {
-            ResourceLocation id = entry.getKey();
-            AttributeInstance attr = entity.getAttribute(entry.getValue());
-            if (attr == null) continue;
+    public void halfSetTick(LivingEntity entity) {
+    }
 
-            boolean shouldHave = desiredModifiers.containsKey(id);
-            boolean hasModifier = attr.getModifier(id) != null;
-
-            if (shouldHave && !hasModifier) {
-                attr.addTransientModifier(desiredModifiers.get(id));
-            } else if (!shouldHave && hasModifier) {
-                attr.removeModifier(id);
-            }
-        }
+    public void fullSetTick(LivingEntity entity) {
     }
 
     public ResourceLocation getResourceLocation() {
         return this.resLoc;
     }
 
-    @Nullable
-    public static ArmorSet getArmorSet(LivingEntity entity) {
-        if (!(entity.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ArmorSetPart headPart)) return null;
-        if (!(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorSetPart chestPart)) return null;
-        if (!(entity.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ArmorSetPart legPart)) return null;
-        if (!(entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof ArmorSetPart feetPart)) return null;
-
-        ArmorSet set = headPart.getArmorSet();
-        if (set == chestPart.getArmorSet() && set == legPart.getArmorSet() && set == feetPart.getArmorSet()) return set;
-        return null;
+    public Traits getFullSetTraits() {
+        return this.fullSetTraits;
     }
 
-    // TODO: no interval check, maybe cache result.
+    public Traits getHalfSetTraits() {
+        return this.halfSetTraits;
+    }
+
+    public Map<Holder<Attribute>, AttributeModifier> getPartModifiers() {
+        return this.partModifiers;
+    }
+
+    public static boolean isFullSet(LivingEntity entity, ArmorSet armorSet) {
+        return getArmorSetCounts(entity).getOrDefault(armorSet, 0) >= 4;
+    }
+
+    public static boolean isHalfSet(LivingEntity entity, ArmorSet armorSet) {
+        return getArmorSetCounts(entity).getOrDefault(armorSet, 0) >= 2;
+    }
+
+    public static Map<ArmorSet, Integer> getArmorSetCounts(LivingEntity entity) {
+        Map<ArmorSet, Integer> counts = new IdentityHashMap<>();
+        for (ItemStack stack : entity.getArmorSlots()) {
+            if (stack.getItem() instanceof ArmorSetPart part) {
+                counts.merge(part.getArmorSet(), 1, Integer::sum);
+            }
+        }
+        return counts;
+    }
+
     public static void onPlayerTick(PlayerTickEvent.Post event) {
-        if (event.getEntity().level().isClientSide()) return;
+        if (event.getEntity().level().isClientSide()) {
+            return;
+        }
         Player player = event.getEntity();
-
-        if (player.hasEffect(MobEffects.LEVITATION) && player.getAttribute(SCGEAttributes.PIONEER) != null
-                && player.getAttribute(SCGEAttributes.PIONEER).getValue() >= 1.0) {
-            player.removeEffect(MobEffects.LEVITATION);
+        if (player.tickCount % TICK_INTERVAL != 0) {
+            return;
         }
+        applyArmorTraits(player);
+    }
 
-        if (player.tickCount % TICK_INTERVAL != 0) return;
+    public static void applyArmorTraits(LivingEntity entity) {
+        Map<ResourceLocation, AttributeModifier> desiredModifiers = new HashMap<>();
 
-        if (player.getAttribute(SCGEAttributes.GOLDEN_IDOL) != null && player.getAttribute(SCGEAttributes.GOLDEN_IDOL).getValue() >= 1.0) {
-            List<LivingEntity> list = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(5), e -> !(e instanceof Enemy));
-            for (LivingEntity le : list) {
-                le.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100));
-                le.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100));
+        for (Map.Entry<ArmorSet, Integer> entry : getArmorSetCounts(entity).entrySet()) {
+            ArmorSet armorSet = entry.getKey();
+            int pieces = entry.getValue();
+
+            if (pieces >= 4) {
+                for (Map.Entry<Holder<Attribute>, AttributeModifier> modifier : armorSet.fullSetTraits.modifiers.entrySet()) {
+                    desiredModifiers.put(modifier.getValue().id(), modifier.getValue());
+                }
+                for (Map.Entry<Holder<MobEffect>, Integer> effect : armorSet.fullSetTraits.effects.entrySet()) {
+                    entity.addEffect(new MobEffectInstance(effect.getKey(), 115, effect.getValue(), true, true));
+                }
+                for (Holder<MobEffect> resistance : armorSet.fullSetTraits.resistances) {
+                    entity.removeEffect(resistance);
+                }
+                armorSet.fullSetTick(entity);
+            }
+
+            if (pieces >= 2) {
+                for (Map.Entry<Holder<Attribute>, AttributeModifier> modifier : armorSet.halfSetTraits.modifiers.entrySet()) {
+                    desiredModifiers.put(modifier.getValue().id(), modifier.getValue());
+                }
+                for (Map.Entry<Holder<MobEffect>, Integer> effect : armorSet.halfSetTraits.effects.entrySet()) {
+                    entity.addEffect(new MobEffectInstance(effect.getKey(), 115, effect.getValue(), true, true));
+                }
+                for (Holder<MobEffect> resistance : armorSet.halfSetTraits.resistances) {
+                    entity.removeEffect(resistance);
+                }
+                armorSet.halfSetTick(entity);
             }
         }
-        if (player.getAttribute(SCGEAttributes.DEBUFF_ZONE) != null && player.getAttribute(SCGEAttributes.DEBUFF_ZONE).getValue() >= 1.0) {
-            List<LivingEntity> list = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10), e -> e instanceof Enemy);
-            for (LivingEntity le : list) {
-                le.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1));
-                le.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100, 1));
+
+        for (Map.Entry<ResourceLocation, Holder<Attribute>> entry : ALL_MODIFIER_ATTRIBUTES.entrySet()) {
+            ResourceLocation id = entry.getKey();
+            AttributeInstance attribute = entity.getAttribute(entry.getValue());
+            if (attribute == null) {
+                continue;
+            }
+            boolean shouldHave = desiredModifiers.containsKey(id);
+            boolean hasModifier = attribute.getModifier(id) != null;
+            if (shouldHave && !hasModifier) {
+                attribute.addTransientModifier(desiredModifiers.get(id));
+            } else if (!shouldHave && hasModifier) {
+                attribute.removeModifier(id);
             }
         }
-
-        ArmorSet armorSet = getArmorSet(player);
-        if (armorSet == null) return;
-
-        armorSet.onTick(player);
     }
 
     public static void onMobEffectApplicable(MobEffectEvent.Applicable event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        ArmorSet armorSet = getArmorSet(player);
-        if (armorSet == null) return;
-
-        if (armorSet.resistances.contains(event.getEffectInstance().getEffect())) {
-            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        LivingEntity entity = event.getEntity();
+        if (!(entity instanceof Player player)) {
+            return;
+        }
+        Holder<MobEffect> effect = event.getEffectInstance().getEffect();
+        for (Map.Entry<ArmorSet, Integer> entry : getArmorSetCounts(player).entrySet()) {
+            ArmorSet armorSet = entry.getKey();
+            int pieces = entry.getValue();
+            if (pieces >= 4 && armorSet.fullSetTraits.resistances.contains(effect)) {
+                event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+            }
+            if (pieces >= 2 && armorSet.halfSetTraits.resistances.contains(effect)) {
+                event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+            }
         }
     }
 
-    // TODO: Consider combining with MedalItem.Traits to a separate class along with handling
     public static class Traits {
         private final Map<Holder<Attribute>, AttributeModifier> modifiers = new HashMap<>();
         private final Map<Holder<MobEffect>, Integer> effects = new HashMap<>();
         private final Set<Holder<MobEffect>> resistances = new HashSet<>();
 
-        public ArmorSet.Traits modifier(Holder<Attribute> attribute, AttributeModifier modifier) {
+        public Traits modifier(Holder<Attribute> attribute, AttributeModifier modifier) {
             this.modifiers.put(attribute, modifier);
             return this;
         }
 
-        public ArmorSet.Traits effect(Holder<MobEffect> effect, int amplifier) {
+        public Traits effect(Holder<MobEffect> effect, int amplifier) {
             this.effects.put(effect, amplifier);
             return this;
         }
 
-        public ArmorSet.Traits resistance(Holder<MobEffect> effect) {
+        public Traits resistance(Holder<MobEffect> effect) {
             this.resistances.add(effect);
             return this;
         }

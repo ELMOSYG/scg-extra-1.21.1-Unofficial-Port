@@ -2,28 +2,25 @@ package net.zincstudios.scgextra.item.armor;
 
 import net.minecraft.core.Holder;
 
-import java.util.Map;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class RitualChestplateItem extends ArmorSetPartWithExtrasItem {
+public class RitualChestplateItem extends GeoArmorSetPartItem {
 
-    public RitualChestplateItem(Holder<ArmorMaterial> material, Type type, ArmorSet armorSet, Map<? extends Holder<Attribute>, AttributeModifier> modifiers, String armorTypeName) {
-        super(material, type, armorSet, modifiers, armorTypeName);
+    public RitualChestplateItem(Holder<ArmorMaterial> material, Type type, ArmorSet armorSet) {
+        super(material, type, armorSet);
     }
 
-    public RitualChestplateItem(Holder<ArmorMaterial> material, Type type, ArmorSet armorSet, Properties properties, Map<? extends Holder<Attribute>, AttributeModifier> modifiers, String armorTypeName) {
-        super(material, type, armorSet, properties, modifiers, armorTypeName);
+    public RitualChestplateItem(Holder<ArmorMaterial> material, Type type, ArmorSet armorSet, Properties properties) {
+        super(material, type, armorSet, properties);
     }
 
     @Override

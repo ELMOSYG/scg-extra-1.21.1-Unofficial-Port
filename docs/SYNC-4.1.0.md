@@ -16,21 +16,16 @@
 | 猪灵/猪灵蛮兵不追击袭击目标 | 新增 `MoveToRaidTargetGoal`，`WaveRaidData#handleRaiderEdgeCase` 对 `minecraft:piglin` / `piglin_brute` 注入 |
 | 4.1.0 的模板池 processor | 复制 4.1.0 的 51 个模板池 JSON（保留本移植版自定义 `trenches/bunker/start_entry.json`） |
 
-## 待同步
+## 已同步：盔甲属性系统重构
 
-### 盔甲属性系统重构
-
-4.1.0 重写了整套属性与护甲：
-
-- 移除隐藏的"套装件数"属性（`oppressor`/`commissar`/...），改为直接扫描已穿护甲件数；
-- 新增百分比属性：`recoil_reduction`、`bullet_damage_resistance`、`magic_damage_resistance`、`bullet_gravity`、`undead_damage_multiplier`、`bullet_additional_crit_chance`、`bullet_additional_crit_damage_multiplier`；
-- `ArmorSet` 改为 `fullSetTraits + halfSetTraits + partModifiers`；
-- `ArmorSetPartItem` 直接携带每件的 `partModifiers`，删除 `ArmorSetPartWithExtrasItem`；
-- 新增 `PercentRenderedAttribute`（配合 AttributeSlib 显示百分比）；
-- 新增 `AttributeHandler`，把子弹/魔法抗性、亡灵增伤移到 `LivingHurtEvent`；
-- 护甲/勋章数值全部改成小数（0.1 = 10%）。
-
-这部分会改动属性注册、所有护甲/勋章、`ModItems`、`RecoilHandlerMixin`、`ProjectileEntityMixin`、`LivingEntityMixin`、tooltip 和语言文件，属于需要实机回归的独立大改，暂未合入。
+- 新增 `PercentRenderedAttribute`：0.1 = 10%，装有 AttributeSlib 时使用其百分比文本。
+- `SCGEAttributes` 重写为 7 个百分比属性：后坐力减免、子弹抗性、额外暴击率/暴击伤害、子弹重力、亡灵增伤、魔法抗性；旧套装计数属性与旧倍率属性移除。
+- `ArmorSet` 重写：`fullSetTraits + halfSetTraits + partModifiers`，直接扫描已穿件数，不再使用隐藏计数属性。
+- `ArmorSetPartItem` 直接携带每件 `partModifiers`；`ModItems` 36 件护甲改用 `ArmorSetPartItem`/`GeoArmorSetPartItem`。
+- 新增 `AttributeHandler`：子弹/魔法抗性、亡灵增伤在 `LivingDamageEvent.Pre` 处理；旧 `LivingEntityMixin` 只保留仪式套复活。
+- `RecoilHandlerMixin` 改用 `RECOIL_REDUCTION`，`ProjectileEntityMixin` 改用 `BULLET_GRAVITY` 与暴击属性。
+- 九套护甲与九枚勋章数值按 4.1.0 全部重写；4.1.0 的 Enlightened / Leviathan 套装类补回。
+- 中英文语言文件同步新属性名。
 
 ### 其他
 

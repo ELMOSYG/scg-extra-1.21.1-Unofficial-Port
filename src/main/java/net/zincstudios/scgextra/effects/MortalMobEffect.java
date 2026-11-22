@@ -17,7 +17,7 @@ public class MortalMobEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity livingEntity, int amplifier) {
-        if (ArmorSet.getArmorSet(livingEntity) != ArmorSets.RITUAL) {
+        if (!ArmorSet.isFullSet(livingEntity, ArmorSets.RITUAL)) {
             livingEntity.removeEffect(ModEffects.MORTAL);
         }
         return true;

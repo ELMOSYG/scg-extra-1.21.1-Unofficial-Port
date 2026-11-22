@@ -22,8 +22,9 @@ public class RecoilHandlerMixin {
             )
     )
     private double onGetAdsRecoilReduction(RecoilHandler instance, Gun gun, Operation<Double> original) {
-        assert Minecraft.getInstance().player != null;  // already checked in the condition block where this is called
-        return (float) (1.0D + Minecraft.getInstance().player.getAttributeValue(SCGEAttributes.RECOIL_MULT) / 100.0D) * original.call(instance, gun);
+        assert Minecraft.getInstance().player != null;
+        double reduction = Minecraft.getInstance().player.getAttributeValue(SCGEAttributes.RECOIL_REDUCTION);
+        return (1.0D - reduction) * original.call(instance, gun);
     }
 
     @WrapOperation(
@@ -34,7 +35,7 @@ public class RecoilHandlerMixin {
             )
     )
     private float onGetEnchantmentModifier(Player player, ItemStack weapon, Operation<Float> original) {
-        return (float)(1+(player.getAttributeValue(SCGEAttributes.RECOIL_MULT)/100)) * original.call(player, weapon);
+        double reduction = player.getAttributeValue(SCGEAttributes.RECOIL_REDUCTION);
+        return (float) ((1.0D - reduction) * original.call(player, weapon));
     }
-
 }

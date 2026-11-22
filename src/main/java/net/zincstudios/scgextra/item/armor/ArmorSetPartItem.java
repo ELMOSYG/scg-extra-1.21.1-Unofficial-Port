@@ -5,16 +5,22 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class ArmorSetPartItem extends ArmorItem implements ArmorSetPart {
 
@@ -27,6 +33,24 @@ public class ArmorSetPartItem extends ArmorItem implements ArmorSetPart {
     public ArmorSetPartItem(Holder<ArmorMaterial> material, Type type, ArmorSet armorSet, Properties properties) {
         super(material, type, properties);
         this.armorSet = armorSet;
+    }
+
+    @Override
+    public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers() {
+        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+        for (ItemAttributeModifiers.Entry entry : super.getDefaultAttributeModifiers().modifiers()) {
+            builder.add(entry.attribute(), entry.modifier(), entry.slot());
+        }
+
+        EquipmentSlotGroup slot = EquipmentSlotGroup.bySlot(this.type.getSlot());
+        for (Map.Entry<Holder<Attribute>, AttributeModifier> entry : this.armorSet.getPartModifiers().entrySet()) {
+            AttributeModifier original = entry.getValue();
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
+                    original.id().getNamespace(),
+                    original.id().getPath() + "_" + this.type.name().toLowerCase(Locale.ROOT));
+            builder.add(entry.getKey(), new AttributeModifier(id, original.amount(), original.operation()), slot);
+        }
+        return builder.build();
     }
 
     @Override
@@ -44,7 +68,6 @@ public class ArmorSetPartItem extends ArmorItem implements ArmorSetPart {
             ChatFormatting halfColor = halfActive ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             ChatFormatting fullColor = fullActive ? ChatFormatting.GREEN : ChatFormatting.GRAY;
 
-            // 当前进度：0/4 ~ 4/4，让玩家一眼看出还差几件
             tooltipComponents.add(Component.translatable("armorset.progress", pieces)
                     .withStyle(pieces >= 2 ? ChatFormatting.WHITE : ChatFormatting.GRAY));
 

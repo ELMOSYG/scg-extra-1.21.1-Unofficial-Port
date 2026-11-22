@@ -5,8 +5,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -15,17 +13,16 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
-public class JuggernautChestplateItem extends ArmorSetPartWithExtrasItem {
+public class JuggernautChestplateItem extends GeoArmorSetPartItem {
 
-    public JuggernautChestplateItem(Holder<ArmorMaterial> material, Type type, ArmorSet armorSet, Map<? extends Holder<Attribute>, AttributeModifier> modifiers, String armorTypeName) {
-        super(material, type, armorSet, modifiers, armorTypeName);
+    public JuggernautChestplateItem(Holder<ArmorMaterial> material, Type type, ArmorSet armorSet) {
+        super(material, type, armorSet);
     }
 
-    public JuggernautChestplateItem(Holder<ArmorMaterial> material, Type type, ArmorSet armorSet, Properties properties, Map<? extends Holder<Attribute>, AttributeModifier> modifiers, String armorTypeName) {
-        super(material, type, armorSet, properties, modifiers, armorTypeName);
+    public JuggernautChestplateItem(Holder<ArmorMaterial> material, Type type, ArmorSet armorSet, Properties properties) {
+        super(material, type, armorSet, properties);
     }
 
     @OnlyIn(value = Dist.CLIENT)

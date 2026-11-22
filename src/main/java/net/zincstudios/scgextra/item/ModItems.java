@@ -139,10 +139,10 @@ public class ModItems {
 
     public static final DeferredHolder<Item, MedalItem>
             MEDAL_OF_SURVIVOR = ITEMS.register("medal_of_survivor", () -> new MedalItem(new MedalItem.Traits()
-                    .modifier(Attributes.ARMOR, new AttributeModifier(ResourceLocation.parse("scgextra:survivor_medal_armor"), 5, AttributeModifier.Operation.ADD_VALUE))
+                    .modifier(Attributes.ARMOR, new AttributeModifier(ResourceLocation.parse("scgextra:survivor_medal_armor"), 5.0, AttributeModifier.Operation.ADD_VALUE))
             )),
             MEDAL_OF_IRON_WILL = ITEMS.register("medal_of_iron_will", () -> new MedalItem(new MedalItem.Traits()
-                    .modifier(SCGEAttributes.BULLET_DAMAGE_TAKEN_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:iron_will_medal_bullet_damage_taken"), -20, AttributeModifier.Operation.ADD_VALUE))
+                    .modifier(SCGEAttributes.BULLET_DAMAGE_RESISTANCE, new AttributeModifier(ResourceLocation.parse("scgextra:iron_will_medal_bullet_resistance"), 0.2, AttributeModifier.Operation.ADD_VALUE))
             )),
             MEDAL_OF_DEFIANCE = ITEMS.register("medal_of_defiance", () -> new MedalItem(new MedalItem.Traits()
                     .modifier(Attributes.MOVEMENT_SPEED, new AttributeModifier(ResourceLocation.parse("scgextra:defiance_medal_movement_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
@@ -158,322 +158,102 @@ public class ModItems {
                     .effect(MobEffects.REGENERATION, 0)
             )),
             MEDAL_OF_OBEDIENCE = ITEMS.register("medal_of_obedience", () -> new MedalItem(new MedalItem.Traits()
-                    .modifier(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(ResourceLocation.parse("scgextra:obedience_medal_armor_toughness"), 3, AttributeModifier.Operation.ADD_VALUE))
-                    .modifier(SCGEAttributes.RECOIL_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:obedience_medal_recoil"), -30, AttributeModifier.Operation.ADD_VALUE))
+                    .modifier(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(ResourceLocation.parse("scgextra:obedience_medal_armor_toughness"), 3.0, AttributeModifier.Operation.ADD_VALUE))
+                    .modifier(SCGEAttributes.RECOIL_REDUCTION, new AttributeModifier(ResourceLocation.parse("scgextra:obedience_medal_recoil"), 0.3, AttributeModifier.Operation.ADD_VALUE))
             )),
             MEDAL_OF_CRUELTY = ITEMS.register("medal_of_cruelty", () -> new MedalItem(new MedalItem.Traits()
-                    .modifier(SCAttributes.BULLET_DAMAGE_MULTIPLIER, new AttributeModifier(ResourceLocation.parse("scgextra:cruelty_medal_bullet_damage"), 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                    .modifier(SCAttributes.BULLET_DAMAGE_MULTIPLIER, new AttributeModifier(ResourceLocation.parse("scgextra:cruelty_medal_bullet_damage"), 0.1, AttributeModifier.Operation.ADD_VALUE))
             )),
             MEDAL_OF_ENLIGHTENMENT = ITEMS.register("medal_of_enlightenment", () -> new MedalItem(new MedalItem.Traits()
-                    .effect(ModEffects.ENLIGHTENMENT, 0)
+                    .effect(net.zincstudios.scgextra.effects.ModEffects.ENLIGHTENMENT, 0)
             )),
             MEDAL_OF_CONQUEROR = ITEMS.register("medal_of_conqueror", () -> new MedalItem(new MedalItem.Traits()
-                    .modifier(SCGEAttributes.BULLET_ADDITIONAL_CRIT_CHANCE, new AttributeModifier(ResourceLocation.parse("scgextra:conqueror_medal_crit_chance"), 20, AttributeModifier.Operation.ADD_VALUE))
-                    .modifier(SCGEAttributes.BULLET_GRAVITY_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:conqueror_medal_gravity"), -20, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                    .modifier(SCGEAttributes.BULLET_ADDITIONAL_CRIT_CHANCE, new AttributeModifier(ResourceLocation.parse("scgextra:conqueror_medal_crit_chance"), 0.2, AttributeModifier.Operation.ADD_VALUE))
+                    .modifier(SCGEAttributes.BULLET_GRAVITY, new AttributeModifier(ResourceLocation.parse("scgextra:conqueror_medal_gravity"), -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
             ));
 
     public static final DeferredHolder<Item, ArmorSetPartItem>
             OPPRESSOR_HELMET = ITEMS.register("oppressor_helmet", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.OPPRESSOR, ArmorItem.Type.HELMET, ArmorSets.OPPRESSOR, 
-                        Map.of(
-                            SCGEAttributes.UNDEAD_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:oppressor_helmet_add_undead_damage"), 5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.OPPRESSOR, new AttributeModifier(ResourceLocation.parse("scgextra:oppressor_helmet_add_oppressor"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Oppressor"
-                    )
+                    new GeoArmorSetPartItem(ModArmorMaterials.OPPRESSOR, ArmorItem.Type.HELMET, ArmorSets.OPPRESSOR)
                 ),
             OPPRESSOR_CHESTPLATE = ITEMS.register("oppressor_chestplate", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.OPPRESSOR, ArmorItem.Type.CHESTPLATE, ArmorSets.OPPRESSOR, 
-                        Map.of(
-                            SCGEAttributes.UNDEAD_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:oppressor_chestplate_add_undead_damage"), 5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.OPPRESSOR, new AttributeModifier(ResourceLocation.parse("scgextra:oppressor_chestplate_add_oppressor"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Oppressor"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.OPPRESSOR, ArmorItem.Type.CHESTPLATE, ArmorSets.OPPRESSOR)),
             OPPRESSOR_LEGGINGS = ITEMS.register("oppressor_leggings", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.OPPRESSOR, ArmorItem.Type.LEGGINGS, ArmorSets.OPPRESSOR, 
-                        Map.of(
-                            SCGEAttributes.UNDEAD_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:oppressor_leggings_add_undead_damage"), 5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.OPPRESSOR, new AttributeModifier(ResourceLocation.parse("scgextra:oppressor_leggings_add_oppressor"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Oppressor"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.OPPRESSOR, ArmorItem.Type.LEGGINGS, ArmorSets.OPPRESSOR)),
             OPPRESSOR_BOOTS = ITEMS.register("oppressor_boots", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.OPPRESSOR, ArmorItem.Type.BOOTS, ArmorSets.OPPRESSOR, 
-                        Map.of(
-                            SCGEAttributes.UNDEAD_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:oppressor_boots_add_undead_damage"), 5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.OPPRESSOR, new AttributeModifier(ResourceLocation.parse("scgextra:oppressor_boot_add_oppressor"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Oppressor"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.OPPRESSOR, ArmorItem.Type.BOOTS, ArmorSets.OPPRESSOR)),
 
             COMMISSAR_HELMET = ITEMS.register("commissar_helmet", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.COMMISSAR, ArmorItem.Type.HELMET, ArmorSets.COMMISSAR,
-                        Map.of(
-                            SCAttributes.RELOAD_SPEED, new AttributeModifier(ResourceLocation.parse("scgextra:commissar_helmet_add_reload_speed"), 0.05, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.COMMISSAR, new AttributeModifier(ResourceLocation.parse("scgextra:commissar_helmet_add_commissar"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Commissar"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.COMMISSAR, ArmorItem.Type.HELMET, ArmorSets.COMMISSAR)),
             COMMISSAR_CHESTPLATE = ITEMS.register("commissar_chestplate", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.COMMISSAR, ArmorItem.Type.CHESTPLATE, ArmorSets.COMMISSAR,
-                        Map.of(
-                            SCAttributes.RELOAD_SPEED, new AttributeModifier(ResourceLocation.parse("scgextra:commissar_chestplate_add_reload_speed"), 0.05, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.COMMISSAR, new AttributeModifier(ResourceLocation.parse("scgextra:commissar_chestplate_add_commissar"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Commissar"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.COMMISSAR, ArmorItem.Type.CHESTPLATE, ArmorSets.COMMISSAR)),
             COMMISSAR_LEGGINGS = ITEMS.register("commissar_leggings", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.COMMISSAR, ArmorItem.Type.LEGGINGS, ArmorSets.COMMISSAR,
-                        Map.of(
-                            SCAttributes.RELOAD_SPEED, new AttributeModifier(ResourceLocation.parse("scgextra:commissar_leggings_add_reload_speed"), 0.05, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.COMMISSAR, new AttributeModifier(ResourceLocation.parse("scgextra:commissar_leggings_add_commissar"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Commissar"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.COMMISSAR, ArmorItem.Type.LEGGINGS, ArmorSets.COMMISSAR)),
             COMMISSAR_BOOTS = ITEMS.register("commissar_boots", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.COMMISSAR, ArmorItem.Type.BOOTS, ArmorSets.COMMISSAR,
-                        Map.of(
-                            SCAttributes.RELOAD_SPEED, new AttributeModifier(ResourceLocation.parse("scgextra:commissar_boots_add_reload_speed"), 0.05, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.COMMISSAR, new AttributeModifier(ResourceLocation.parse("scgextra:commissar_boots_add_commissar"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Commissar"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.COMMISSAR, ArmorItem.Type.BOOTS, ArmorSets.COMMISSAR)),
 
             WRECKER_HELMET = ITEMS.register("wrecker_helmet", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.WRECKER, ArmorItem.Type.HELMET, ArmorSets.WRECKER,
-                        Map.of(
-                            SCGEAttributes.GENERAL_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:wrecker_helmet_add_damage"), 5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.WRECEKR, new AttributeModifier(ResourceLocation.parse("scgextra:wrecker_helmet_add_wrecker"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Wrecker"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.WRECKER, ArmorItem.Type.HELMET, ArmorSets.WRECKER)),
             WRECKER_CHESTPLATE = ITEMS.register("wrecker_chestplate", () ->
-                    new WreckerChestplateItem(ModArmorMaterials.WRECKER, ArmorItem.Type.CHESTPLATE, ArmorSets.WRECKER,
-                        Map.of(
-                            SCGEAttributes.GENERAL_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:wrecker_chestplate_add_damage"), 5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.WRECEKR, new AttributeModifier(ResourceLocation.parse("scgextra:wrecker_chestplate_add_wrecker"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Wrecker"
-                    )),
+                    new WreckerChestplateItem(ModArmorMaterials.WRECKER, ArmorItem.Type.CHESTPLATE, ArmorSets.WRECKER)),
             WRECKER_LEGGINGS = ITEMS.register("wrecker_leggings", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.WRECKER, ArmorItem.Type.LEGGINGS, ArmorSets.WRECKER,
-                        Map.of(
-                            SCGEAttributes.GENERAL_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:wrecker_leggings_add_damage"), 5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.WRECEKR, new AttributeModifier(ResourceLocation.parse("scgextra:wrecker_leggings_add_wrecker"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Wrecker"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.WRECKER, ArmorItem.Type.LEGGINGS, ArmorSets.WRECKER)),
             WRECKER_BOOTS = ITEMS.register("wrecker_boots", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.WRECKER, ArmorItem.Type.BOOTS, ArmorSets.WRECKER,
-                        Map.of(
-                            SCGEAttributes.GENERAL_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:wrecker_boots_add_damage"), 5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.WRECEKR, new AttributeModifier(ResourceLocation.parse("scgextra:wrecker_boots_add_wrecker"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Wrecker"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.WRECKER, ArmorItem.Type.BOOTS, ArmorSets.WRECKER)),
 
             LEVIATHAN_HELMET = ITEMS.register("leviathan_helmet", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.LEVIATHAN, ArmorItem.Type.HELMET, ArmorSets.LEVIATHAN,
-                        Map.of(
-                            SCGEAttributes.MAGIC_DAMAGE_REDUCTION, new AttributeModifier(ResourceLocation.parse("scgextra:leviathan_helmet_add_magic_damage_reduction"), -10, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.LEVIATHAN, new AttributeModifier(ResourceLocation.parse("scgextra:leviathan_helmet_add_leviathan"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Leviathan"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.LEVIATHAN, ArmorItem.Type.HELMET, ArmorSets.LEVIATHAN)),
             LEVIATHAN_CHESTPLATE = ITEMS.register("leviathan_chestplate", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.LEVIATHAN, ArmorItem.Type.CHESTPLATE, ArmorSets.LEVIATHAN,
-                        Map.of(
-                            SCGEAttributes.MAGIC_DAMAGE_REDUCTION, new AttributeModifier(ResourceLocation.parse("scgextra:leviathan_chestplate_add_magic_damage_reduction"), -10, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.LEVIATHAN, new AttributeModifier(ResourceLocation.parse("scgextra:leviathan_chestplate_add_leviathan"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Leviathan"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.LEVIATHAN, ArmorItem.Type.CHESTPLATE, ArmorSets.LEVIATHAN)),
             LEVIATHAN_LEGGINGS = ITEMS.register("leviathan_leggings", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.LEVIATHAN, ArmorItem.Type.LEGGINGS, ArmorSets.LEVIATHAN,
-                        Map.of(
-                            SCGEAttributes.MAGIC_DAMAGE_REDUCTION, new AttributeModifier(ResourceLocation.parse("scgextra:leviathan_leggings_add_magic_damage_reduction"), -10, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.LEVIATHAN, new AttributeModifier(ResourceLocation.parse("scgextra:leviathan_leggings_add_leviathan"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Leviathan"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.LEVIATHAN, ArmorItem.Type.LEGGINGS, ArmorSets.LEVIATHAN)),
             LEVIATHAN_BOOTS = ITEMS.register("leviathan_boots", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.LEVIATHAN, ArmorItem.Type.BOOTS, ArmorSets.LEVIATHAN,
-                        Map.of(
-                            SCGEAttributes.MAGIC_DAMAGE_REDUCTION, new AttributeModifier(ResourceLocation.parse("scgextra:leviathan_boots_add_magic_damage_reduction"), -10, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.LEVIATHAN, new AttributeModifier(ResourceLocation.parse("scgextra:leviathan_boots_add_leviathan"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Leviathan"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.LEVIATHAN, ArmorItem.Type.BOOTS, ArmorSets.LEVIATHAN)),
 
             GOLDEN_IDOL_HELMET = ITEMS.register("golden_idol_helmet", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.GOLDEN_IDOL, ArmorItem.Type.HELMET, ArmorSets.GOLDEN_IDOL,
-                        Map.of(
-                            SCGEAttributes.GOLDEN_IDOL, new AttributeModifier(ResourceLocation.parse("scgextra:golden_idol_helmet_add_golden_idol"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.MAGIC_DAMAGE_REDUCTION, new AttributeModifier(ResourceLocation.parse("scgextra:golden_idol_helmet_add_magic_damage_reduction"), -10, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Golden Idol"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.GOLDEN_IDOL, ArmorItem.Type.HELMET, ArmorSets.GOLDEN_IDOL)),
             GOLDEN_IDOL_CHESTPLATE = ITEMS.register("golden_idol_chestplate", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.GOLDEN_IDOL, ArmorItem.Type.CHESTPLATE, ArmorSets.GOLDEN_IDOL,
-                        Map.of(
-                            SCGEAttributes.GOLDEN_IDOL, new AttributeModifier(ResourceLocation.parse("scgextra:golden_idol_chestplate_add_golden_idol"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.MAGIC_DAMAGE_REDUCTION, new AttributeModifier(ResourceLocation.parse("scgextra:golden_idol_chestplate_add_magic_damage_reduction"), -10, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Golden Idol"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.GOLDEN_IDOL, ArmorItem.Type.CHESTPLATE, ArmorSets.GOLDEN_IDOL)),
             GOLDEN_IDOL_LEGGINGS = ITEMS.register("golden_idol_leggings", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.GOLDEN_IDOL, ArmorItem.Type.LEGGINGS, ArmorSets.GOLDEN_IDOL,
-                        Map.of(
-                            SCGEAttributes.GOLDEN_IDOL, new AttributeModifier(ResourceLocation.parse("scgextra:golden_idol_leggings_add_golden_idol"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.MAGIC_DAMAGE_REDUCTION, new AttributeModifier(ResourceLocation.parse("scgextra:golden_idol_leggings_add_magic_damage_reduction"), -10, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Golden Idol"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.GOLDEN_IDOL, ArmorItem.Type.LEGGINGS, ArmorSets.GOLDEN_IDOL)),
             GOLDEN_IDOL_BOOTS = ITEMS.register("golden_idol_boots", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.GOLDEN_IDOL, ArmorItem.Type.BOOTS, ArmorSets.GOLDEN_IDOL,
-                        Map.of(
-                            SCGEAttributes.GOLDEN_IDOL, new AttributeModifier(ResourceLocation.parse("scgextra:golden_idol_boots_add_golden_idol"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.MAGIC_DAMAGE_REDUCTION, new AttributeModifier(ResourceLocation.parse("scgextra:golden_idol_boots_add_magic_damage_reduction"), -10, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Golden Idol"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.GOLDEN_IDOL, ArmorItem.Type.BOOTS, ArmorSets.GOLDEN_IDOL)),
 
             ENLIGHTENED_HELMET = ITEMS.register("enlightened_helmet", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.ENLIGHTENED, ArmorItem.Type.HELMET, ArmorSets.ENLIGHTENED,
-                        Map.of(
-                            SCGEAttributes.ENLIGHTENED, new AttributeModifier(ResourceLocation.parse("scgextra:enlightened_helmet_add_enlightened"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            Attributes.MAX_HEALTH, new AttributeModifier(ResourceLocation.parse("scgextra:enlightened_helmet_add_health"), 2, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Enlightened"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.ENLIGHTENED, ArmorItem.Type.HELMET, ArmorSets.ENLIGHTENED)),
             ENLIGHTENED_CHESTPLATE = ITEMS.register("enlightened_chestplate", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.ENLIGHTENED, ArmorItem.Type.CHESTPLATE, ArmorSets.ENLIGHTENED,
-                        Map.of(
-                            SCGEAttributes.ENLIGHTENED, new AttributeModifier(ResourceLocation.parse("scgextra:enlightened_chestplate_add_enlightened"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            Attributes.MAX_HEALTH, new AttributeModifier(ResourceLocation.parse("scgextra:enlightened_chestplate_add_health"), 2, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Enlightened"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.ENLIGHTENED, ArmorItem.Type.CHESTPLATE, ArmorSets.ENLIGHTENED)),
             ENLIGHTENED_LEGGINGS = ITEMS.register("enlightened_leggings", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.ENLIGHTENED, ArmorItem.Type.LEGGINGS, ArmorSets.ENLIGHTENED,
-                        Map.of(
-                            SCGEAttributes.ENLIGHTENED, new AttributeModifier(ResourceLocation.parse("scgextra:enlightened_leggings_add_enlightened"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            Attributes.MAX_HEALTH, new AttributeModifier(ResourceLocation.parse("scgextra:enlightened_leggings_add_health"), 2, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Enlightened"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.ENLIGHTENED, ArmorItem.Type.LEGGINGS, ArmorSets.ENLIGHTENED)),
             ENLIGHTENED_BOOTS = ITEMS.register("enlightened_boots", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.ENLIGHTENED, ArmorItem.Type.BOOTS, ArmorSets.ENLIGHTENED,
-                        Map.of(
-                            SCGEAttributes.ENLIGHTENED, new AttributeModifier(ResourceLocation.parse("scgextra:enlightened_boots_add_enlightened"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            Attributes.MAX_HEALTH, new AttributeModifier(ResourceLocation.parse("scgextra:enlightened_boots_add_health"), 2, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Enlightened"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.ENLIGHTENED, ArmorItem.Type.BOOTS, ArmorSets.ENLIGHTENED)),
 
             JUGGERNAUT_HELMET = ITEMS.register("juggernaut_helmet", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.JUGGERNAUT, ArmorItem.Type.HELMET, ArmorSets.JUGGERNAUT,
-                        Map.of(
-                            SCGEAttributes.RECOIL_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_helmet_lower_recoil"), -5, AttributeModifier.Operation.ADD_VALUE),
-                            Attributes.MOVEMENT_SPEED, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_helmet_lower_speed"), -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                            SCGEAttributes.JUGGERNAUT, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_helmet_add_juggernaut"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Juggernaut"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.JUGGERNAUT, ArmorItem.Type.HELMET, ArmorSets.JUGGERNAUT)),
             JUGGERNAUT_CHESTPLATE = ITEMS.register("juggernaut_chestplate", () ->
-                    new JuggernautChestplateItem(ModArmorMaterials.JUGGERNAUT, ArmorItem.Type.CHESTPLATE, ArmorSets.JUGGERNAUT,
-                        Map.of(
-                            SCGEAttributes.RECOIL_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_chestplate_lower_recoil"), -5, AttributeModifier.Operation.ADD_VALUE),
-                            Attributes.MOVEMENT_SPEED, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_chestplate_lower_speed"), -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                            SCGEAttributes.JUGGERNAUT, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_chestplate_add_juggernaut"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Juggernaut"
-                    )),
+                    new JuggernautChestplateItem(ModArmorMaterials.JUGGERNAUT, ArmorItem.Type.CHESTPLATE, ArmorSets.JUGGERNAUT)),
             JUGGERNAUT_LEGGINGS = ITEMS.register("juggernaut_leggings", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.JUGGERNAUT, ArmorItem.Type.LEGGINGS, ArmorSets.JUGGERNAUT,
-                        Map.of(
-                            SCGEAttributes.RECOIL_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_leggings_lower_recoil"), -5, AttributeModifier.Operation.ADD_VALUE),
-                            Attributes.MOVEMENT_SPEED, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_leggings_lower_speed"), -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                            SCGEAttributes.JUGGERNAUT, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_leggings_add_juggernaut"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Juggernaut"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.JUGGERNAUT, ArmorItem.Type.LEGGINGS, ArmorSets.JUGGERNAUT)),
             JUGGERNAUT_BOOTS = ITEMS.register("juggernaut_boots", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.JUGGERNAUT, ArmorItem.Type.BOOTS, ArmorSets.JUGGERNAUT,
-                        Map.of(
-                            SCGEAttributes.RECOIL_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_boots_lower_recoil"), -5, AttributeModifier.Operation.ADD_VALUE),
-                            Attributes.MOVEMENT_SPEED, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_boots_lower_speed"), -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                            SCGEAttributes.JUGGERNAUT, new AttributeModifier(ResourceLocation.parse("scgextra:juggernaut_boots_add_juggernaut"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Juggernaut"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.JUGGERNAUT, ArmorItem.Type.BOOTS, ArmorSets.JUGGERNAUT)),
 
             RITUAL_HELMET = ITEMS.register("ritual_helmet", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.RITUAL, ArmorItem.Type.HELMET, ArmorSets.RITUAL,
-                        Map.of(
-                            SCGEAttributes.RITUAL, new AttributeModifier(ResourceLocation.parse("scgextra:ritual_helmet_add_ritual"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.GENERAL_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:ritual_helmet_add_general_damage"), 2.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Ritual"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.RITUAL, ArmorItem.Type.HELMET, ArmorSets.RITUAL)),
             RITUAL_CHESTPLATE = ITEMS.register("ritual_chestplate", () ->
-                    new RitualChestplateItem(ModArmorMaterials.RITUAL, ArmorItem.Type.CHESTPLATE, ArmorSets.RITUAL,
-                        Map.of(
-                            SCGEAttributes.RITUAL, new AttributeModifier(ResourceLocation.parse("scgextra:ritual_chestplate_add_ritual"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.GENERAL_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:ritual_chestplate_add_general_damage"), 2.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Ritual"
-                    )),
+                    new RitualChestplateItem(ModArmorMaterials.RITUAL, ArmorItem.Type.CHESTPLATE, ArmorSets.RITUAL)),
             RITUAL_LEGGINGS = ITEMS.register("ritual_leggings", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.RITUAL, ArmorItem.Type.LEGGINGS, ArmorSets.RITUAL,
-                        Map.of(
-                            SCGEAttributes.RITUAL, new AttributeModifier(ResourceLocation.parse("scgextra:ritual_leggings_add_ritual"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.GENERAL_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:ritual_leggings_add_general_damage"), 2.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Ritual"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.RITUAL, ArmorItem.Type.LEGGINGS, ArmorSets.RITUAL)),
             RITUAL_BOOTS = ITEMS.register("ritual_boots", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.RITUAL, ArmorItem.Type.BOOTS, ArmorSets.RITUAL,
-                        Map.of(
-                            SCGEAttributes.RITUAL, new AttributeModifier(ResourceLocation.parse("scgextra:ritual_boots_add_ritual"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.GENERAL_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:ritual_boots_add_general_damage"), 2.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Ritual"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.RITUAL, ArmorItem.Type.BOOTS, ArmorSets.RITUAL)),
 
             PIONEER_HELMET = ITEMS.register("pioneer_helmet", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.PIONEER, ArmorItem.Type.HELMET, ArmorSets.PIONEER,
-                        Map.of(
-                            SCGEAttributes.BULLET_ADDITIONAL_CRIT_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:pioneer_helmet_add_bullet_crit_damage"), 2.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.PIONEER, new AttributeModifier(ResourceLocation.parse("scgextra:pioneer_helmet_add_pioneer"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Pioneer"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.PIONEER, ArmorItem.Type.HELMET, ArmorSets.PIONEER)),
             PIONEER_CHESTPLATE = ITEMS.register("pioneer_chestplate", () ->
-                    new PioneerChestplateItem(ModArmorMaterials.PIONEER, ArmorItem.Type.CHESTPLATE, ArmorSets.PIONEER,
-                        Map.of(
-                            SCGEAttributes.PIONEER, new AttributeModifier(ResourceLocation.parse("scgextra:pioneer_chestplate_add_pioneer"), 0.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.BULLET_ADDITIONAL_CRIT_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:pioneer_chestplate_add_bullet_crit_damage"), 2.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Pioneer"
-                    )),
+                    new PioneerChestplateItem(ModArmorMaterials.PIONEER, ArmorItem.Type.CHESTPLATE, ArmorSets.PIONEER)),
             PIONEER_LEGGINGS = ITEMS.register("pioneer_leggings", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.PIONEER, ArmorItem.Type.LEGGINGS, ArmorSets.PIONEER,
-                        Map.of(
-                            SCGEAttributes.PIONEER, new AttributeModifier(ResourceLocation.parse("scgextra:pioneer_leggings_add_pioneer"), 0.5, AttributeModifier.Operation.ADD_VALUE), 
-                            SCGEAttributes.BULLET_ADDITIONAL_CRIT_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:pioneer_leggings_add_bullet_crit_damage"), 2.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Pioneer"
-                    )),
+                    new GeoArmorSetPartItem(ModArmorMaterials.PIONEER, ArmorItem.Type.LEGGINGS, ArmorSets.PIONEER)),
             PIONEER_BOOTS = ITEMS.register("pioneer_boots", () ->
-                    new ArmorSetPartWithExtrasItem(ModArmorMaterials.PIONEER, ArmorItem.Type.BOOTS, ArmorSets.PIONEER,
-                        Map.of(
-                            SCGEAttributes.BULLET_ADDITIONAL_CRIT_DAMAGE_MULT, new AttributeModifier(ResourceLocation.parse("scgextra:pioneer_boots_add_bullet_crit_damage"), 2.5, AttributeModifier.Operation.ADD_VALUE),
-                            SCGEAttributes.PIONEER, new AttributeModifier(ResourceLocation.parse("scgextra:pioneer_boots_add_pioneer"), 0.5, AttributeModifier.Operation.ADD_VALUE)
-                        ),
-                        "Pioneer"
-                    ));
+                    new GeoArmorSetPartItem(ModArmorMaterials.PIONEER, ArmorItem.Type.BOOTS, ArmorSets.PIONEER));
 
     public static final DeferredHolder<Item, SpawnEggItem>
                 // Whaler
@@ -572,8 +352,6 @@ public class ModItems {
         NeoForge.EVENT_BUS.addListener(MedalItem::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(MedalItem::onMobEffectApplicable);
         NeoForge.EVENT_BUS.addListener(ArmorSet::onPlayerTick);
-        NeoForge.EVENT_BUS.addListener(ArmorExtraModiferHandler::onPlayerTick);
-        NeoForge.EVENT_BUS.addListener(ArmorExtraModiferHandler::onTooltip);
         NeoForge.EVENT_BUS.addListener(ArmorSet::onMobEffectApplicable);
         NeoForge.EVENT_BUS.addListener(ArmorSets::onEntityHurt);
         NeoForge.EVENT_BUS.addListener(CavalrySaberItem::onPlayerTick);
