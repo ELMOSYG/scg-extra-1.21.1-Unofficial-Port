@@ -35,6 +35,24 @@ piglinPortalMinSpawnDistance = 512
 3. 结构 JSON 的 `type` 改成新结构类型；`start_pool`、`biomes`、`terrain_adaptation` 等保持不变。
 4. 添加中英文配置说明。
 
+**补充：猪灵窑炉兽的索敌距离**
+
+前期被追杀的另一个直接原因是 `PiglinKilnHogEntity` 本身：
+
+- `Attributes.FOLLOW_RANGE = 128.0`
+- AI 使用 `ModBrainSensors.EXTREMELY_LONG_RANGE_PLAYER`，即 `VarRangePlayerSensor(60, 128)`
+  - 每 60 tick 扫描一次
+  - 玩家可见半径 128 格
+
+也就是说，即使传送门结构离出生点有一段距离，窑炉兽也能从 128 格外发现玩家并开始追击。其他猪灵单位（猪灵贵族、烈焰旋翼机、疣猪骑士、猪灵蛮兵首领等）目前也都是 128 格。
+
+可选的平衡方向（尚未修改）：
+
+1. 只把窑炉兽改成 `FOLLOW_RANGE = 48/64` + `VERY_LONG_RANGE_PLAYER`（48 格）；
+2. 把所有猪灵单位统一降到 48~64 格；
+3. 保留 128 格，但只让传送门结构在出生点 512 格外生成；
+4. 做成配置项，例如 `piglinAggroRange` / `piglinPortalMinSpawnDistance`。
+
 **注意**
 
 - 只对**新生成区块**生效；旧存档已生成的传送门不会消失。
