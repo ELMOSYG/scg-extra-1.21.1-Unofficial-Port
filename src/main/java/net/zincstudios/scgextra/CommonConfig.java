@@ -140,6 +140,13 @@ public class CommonConfig {
             .comment("maximum spawn weirdness for the warzone biome")
             .defineInRange("warzoneSpawnMaximumWeirdness", 1.0, -1.0, 1.0);
 
+    public static final ModConfigSpec.IntValue WARZONE_MIN_DISTANCE_FROM_SPAWN = BUILDER
+            .comment("""
+                minimum horizontal distance from the world spawn where the warzone biome may generate.
+                0 disables the exclusion zone.
+                """)
+            .defineInRange("warzoneMinDistanceFromSpawn", 512, 0, 10000);
+
 
     // Might not be possible actually
 //    private static final ModConfigSpec.IntValue ABILITY_WARNING_LENGTH = BUILDER
@@ -170,6 +177,7 @@ public class CommonConfig {
     public static double abilityWeaknessMinHealth;
     public static int warzoneSpawnWeight;
     public static double warzoneSpawnRangeScale;
+    public static int warzoneMinDistanceFromSpawn;
     public static double warzoneSpawnMaxTemp;
     public static double warzoneSpawnMinTemp;
     public static double warzoneSpawnMaxHumidity;
@@ -204,6 +212,7 @@ public class CommonConfig {
 
         warzoneSpawnWeight = WARZONE_SPAWN_WEIGHT.get();
         warzoneSpawnRangeScale = WARZONE_SPAWN_RANGE_SCALE.get();
+        warzoneMinDistanceFromSpawn = WARZONE_MIN_DISTANCE_FROM_SPAWN.get();
         warzoneSpawnMaxTemp = WARZONE_SPAWN_MAXIMUM_TEMPERATURE.get();
         warzoneSpawnMinTemp = WARZONE_SPAWN_MINIMUM_TEMPERATURE.get();
         warzoneSpawnMaxHumidity = WARZONE_SPAWN_MAXIMUM_HUMIDITY.get();
