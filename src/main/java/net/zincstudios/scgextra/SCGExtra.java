@@ -69,6 +69,8 @@ public class SCGExtra
         NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.SpawnEventHandler::onCheckSpawn);
         NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.SpawnEventHandler::onFinalizeSpawn);
         NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.SpawnEventHandler::onExplosionDetonate);
+        NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.worldgen.WorldSpawnHandler::onServerAboutToStart);
+        NeoForge.EVENT_BUS.addListener(net.zincstudios.scgextra.worldgen.WorldSpawnHandler::onServerStarted);
 
         // TODO(阶段 9): DataGenerators。
     }
