@@ -21,8 +21,7 @@
     "RecoilHandlerMixin",
     "SignalBeaconEntityMixin",
     "ResourceOrTagKeyArgumentMixin",
-    "EntityRideGuardMixin",
-    "WarzoneBiomeDistanceMixin"
+    "EntityRideGuardMixin"
   ],
   "client": [
     "HeadshotBoxDebugRendererMixin"

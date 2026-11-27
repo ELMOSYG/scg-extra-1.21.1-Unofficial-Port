@@ -20,7 +20,6 @@ public final class WorldSpawnHandler {
 
     private static final int SEARCH_STEP = 16;
     private static final int MAX_RADIUS = 2048;
-    private static volatile BlockPos exclusionCenter = BlockPos.ZERO;
 
     private WorldSpawnHandler() {
     }
@@ -42,7 +41,6 @@ public final class WorldSpawnHandler {
         }
 
         BlockPos spawn = overworld.getSharedSpawnPos();
-        exclusionCenter = spawn;
         if (!overworld.getBiome(spawn).is(ModBiomes.WARZONE_BIOME)) {
             return;
         }
@@ -54,12 +52,7 @@ public final class WorldSpawnHandler {
         }
 
         overworld.setDefaultSpawnPos(replacement, 0.0F);
-        exclusionCenter = replacement;
         SCGExtra.LOGGER.info("Moved world spawn out of the warzone biome: {} -> {}", spawn, replacement);
-    }
-
-    public static BlockPos getExclusionCenter() {
-        return exclusionCenter;
     }
 
     private static BlockPos findNearestNonWarzoneSpawn(ServerLevel level, BlockPos origin) {
