@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "#scgextra:factions/cog",
+    "#scgextra:factions/rrc",
     "scgextra:fac_walker",
     "scgextra:fac_tank"
   ]
