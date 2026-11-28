@@ -42,10 +42,21 @@ public class BaseEntityRenderer<T extends LivingEntity & GeoEntity> extends GeoE
 
     @Override
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        // Chromeware 的 ScanVision 会用单个 ByteBufferSource 重绘实体；GeckoLib 的延迟/多 RenderType
+        // 渲染与它的缓冲区生命周期冲突，会导致 BufferBuilder.ensureBuilding 崩溃。
+        // 扫描模式下跳过我们的 GeckoLib 实体，避免客户端崩溃。
+        if (isChromewareScan(bufferSource)) {
+            return;
+        }
         if (!this.hasCustomShadowRadius && this.shadowRadius == 0) {
             this.shadowRadius = entity.getBbWidth()/2;
         }
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
+
+    private static boolean isChromewareScan(MultiBufferSource bufferSource) {
+        return bufferSource != null
+                && bufferSource.getClass().getName().startsWith("com.chromeware.client.netrunning.ScanVision");
     }
 
     @Override
