@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "#scgextra:factions/cog"
+    "#scgextra:factions/cog",
+    "scgextra:fac_walker",
+    "scgextra:fac_tank"
   ]
 }
