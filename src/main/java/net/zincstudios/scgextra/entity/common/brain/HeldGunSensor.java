@@ -40,8 +40,16 @@ public class HeldGunSensor extends Sensor<LivingEntity> {
         Brain<?> brain = entity.getBrain();
         Optional<SimulatedGun> optional = brain.getMemory(ModBrainMemories.SIMULATED_GUN.get());
 
-        if ((optional.isEmpty() || optional.get().hasChanged(entity))
-                && entity.getMainHandItem().getItem() instanceof GunItem) {
+        if (!(entity.getMainHandItem().getItem() instanceof GunItem)) {
+            // 枪被移除/替换成空手时，必须清掉旧的模拟枪记忆；否则 ShootTarget 会继续用
+            // 已经失效的 HeldScorchedSimGun 开火，导致空指针或 AirItem 强转 GunItem。
+            brain.eraseMemory(ModBrainMemories.SIMULATED_GUN.get());
+            brain.eraseMemory(ModBrainMemories.WEAPON_IDEAL_RANGE.get());
+            brain.eraseMemory(ModBrainMemories.WEAPON_MAX_RANGE.get());
+            return;
+        }
+
+        if (optional.isEmpty() || optional.get().hasChanged(entity)) {
             SimulatedGun simGun = new HeldScorchedSimGun(entity.getMainHandItem());
             brain.setMemory(ModBrainMemories.SIMULATED_GUN.get(), simGun);
             brain.setMemory(ModBrainMemories.WEAPON_IDEAL_RANGE.get(), simGun.getIdealRange());
