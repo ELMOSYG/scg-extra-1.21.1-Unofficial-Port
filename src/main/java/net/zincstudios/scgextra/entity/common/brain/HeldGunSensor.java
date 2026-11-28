@@ -2,10 +2,12 @@ package net.zincstudios.scgextra.entity.common.brain;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.zincstudios.scgextra.entity.ModBrainMemories;
 import net.zincstudios.scgextra.entity.common.gun.HeldScorchedSimGun;
 import net.zincstudios.scgextra.entity.common.gun.SimulatedGun;
@@ -33,6 +35,26 @@ public class HeldGunSensor extends Sensor<LivingEntity> {
                 ModBrainMemories.WEAPON_IDEAL_RANGE.get(),
                 ModBrainMemories.WEAPON_MAX_RANGE.get()
         );
+    }
+
+    /**
+     * 外部模组（例如 Chromeware 的武器故障芯片）可能直接把主手物品清成空气。
+     * 这里在主手变化时立即清掉“手持枪”的模拟枪记忆，不用等下一次 10 tick 扫描。
+     * 自定义枪械（CustomScorchedSimGun）不依赖主手，不会被这里误清。
+     */
+    public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
+        if (event.getSlot() != EquipmentSlot.MAINHAND || !(event.getEntity() instanceof LivingEntity entity)) {
+            return;
+        }
+        if (event.getTo().getItem() instanceof GunItem) {
+            return;
+        }
+        Brain<?> brain = entity.getBrain();
+        if (brain.getMemory(ModBrainMemories.SIMULATED_GUN.get()).orElse(null) instanceof HeldScorchedSimGun) {
+            brain.eraseMemory(ModBrainMemories.SIMULATED_GUN.get());
+            brain.eraseMemory(ModBrainMemories.WEAPON_IDEAL_RANGE.get());
+            brain.eraseMemory(ModBrainMemories.WEAPON_MAX_RANGE.get());
+        }
     }
 
     @Override
