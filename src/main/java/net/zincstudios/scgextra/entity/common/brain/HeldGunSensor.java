@@ -43,13 +43,18 @@ public class HeldGunSensor extends Sensor<LivingEntity> {
      * 自定义枪械（CustomScorchedSimGun）不依赖主手，不会被这里误清。
      */
     public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
-        if (event.getSlot() != EquipmentSlot.MAINHAND || !(event.getEntity() instanceof LivingEntity entity)) {
+        if (event.getSlot() != EquipmentSlot.MAINHAND || !(event.getEntity() instanceof net.minecraft.world.entity.Mob mob)) {
             return;
         }
         if (event.getTo().getItem() instanceof GunItem) {
             return;
         }
-        Brain<?> brain = entity.getBrain();
+        Brain<?> brain = mob.getBrain();
+        // 不是所有 Mob 都注册了模拟枪记忆；必须先确认已注册/有值，
+        // 否则 Brain.getMemory 会抛 "Unregistered memory fetched"。
+        if (!brain.hasMemoryValue(ModBrainMemories.SIMULATED_GUN.get())) {
+            return;
+        }
         if (brain.getMemory(ModBrainMemories.SIMULATED_GUN.get()).orElse(null) instanceof HeldScorchedSimGun) {
             brain.eraseMemory(ModBrainMemories.SIMULATED_GUN.get());
             brain.eraseMemory(ModBrainMemories.WEAPON_IDEAL_RANGE.get());
